@@ -1,16 +1,25 @@
 # xmonad-config
-xmonad-config can be used instead of xmonad.  
+My xmonad configuration (xmonad.hs) with haskell-stack
+
 
 # How to install
+
 ```shell
-$ stack install
+$ stack install && xmonad-config-recompile
 ```
+
 
 # How to use
-Add the following line into your .xinitrc
+Add the following this line into your .xinitrc
 
 ```shell
-exec ~/.local/bin/xmonad-config
+exec stack exec xmonad-config
 ```
 
-and do `startx`
+and execute `startx`
+
+
+# Another informations
+- `./xmonad{,-contrib,-extras}` are exists for debugging
+- `xmonad-config-recompile` only do what is copying needed files
+- You can quickly restart xmonad-config by `stack install && xmonad-config-recompile && stack exec -- xmonad-config --restart`
