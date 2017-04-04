@@ -27,9 +27,9 @@ import qualified XMonadConfig.Shelly as SH
 
 main :: IO ()
 main = do
-  inHhkbMode <- currentKeyModeIs SH.HHKB
-  let (myModMask, myKeys) = if inHhkbMode then (hhkbCasualMask, myHHKBKeys)
-                                          else (superMask, myNormalKeys)
+  inUnixKeymapMode <- currentKeyModeIs SH.UnixKeymap
+  let (myModMask, myKeys) = if inUnixKeymapMode then (unixCasualMask, myUnixKeys)
+                                                else (superMask, myNormalKeys)
   (xmobar >=> xmonad) $ desktopConfig
     { terminal           = "termite"
     , modMask            = myModMask
@@ -51,8 +51,8 @@ altMask = mod1Mask
 superMask :: KeyMask
 superMask = mod4Mask
 
-hhkbCasualMask :: KeyMask
-hhkbCasualMask = controlMask .|. shiftMask
+unixCasualMask :: KeyMask
+unixCasualMask = controlMask .|. shiftMask
 
 
 myLayoutHook = twoTabbedPane ||| Grid
@@ -86,7 +86,7 @@ myNormalKeys =
   , ((altMask, xK_j), withFocused (sendMessage . MergeAll))
   , ((altMask, xK_k), withFocused (sendMessage . UnMerge))
   , ((altMask, xK_l), windows focusDown)
-  , ((hhkbCasualMask, xK_x), switchKeyModeTo SH.HHKB)
+  , ((unixCasualMask, xK_x), switchKeyModeTo SH.UnixKeymap)
   , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
   , ((superMask .|. shiftMask, xK_F1), spawn "xscreensaver-command -lock; sudo pm-hibernate") -- ^ must add pm-hibernate to sudoers without inputting password
@@ -110,24 +110,24 @@ myNormalKeys =
   , ((superMask, xK_r), spawn "dmenu_run")
   ]
 
-myHHKBKeys :: [((KeyMask, KeySym), X ())]
-myHHKBKeys =
-  [ ((hhkbCasualMask .|. altMask, xK_h), windows swapUp)
-  , ((hhkbCasualMask .|. altMask, xK_l), windows swapDown)
-  , ((hhkbCasualMask, xK_a), sinkAll)
-  , ((hhkbCasualMask, xK_c), kill)
-  , ((hhkbCasualMask, xK_e), spawn "thunar")
-  , ((hhkbCasualMask, xK_f), spawn "firefox")
-  , ((hhkbCasualMask, xK_g), sendMessage NextLayout)
-  , ((hhkbCasualMask, xK_h), windows focusUp)
-  , ((hhkbCasualMask, xK_i), nextScreen)
-  , ((hhkbCasualMask, xK_j), withFocused (sendMessage . MergeAll))
-  , ((hhkbCasualMask, xK_k), withFocused (sendMessage . UnMerge))
-  , ((hhkbCasualMask, xK_l), windows focusDown)
-  , ((hhkbCasualMask, xK_m), spawn "xfce4-mixer")
-  , ((hhkbCasualMask, xK_r), spawn "dmenu_run")
-  , ((hhkbCasualMask, xK_t), spawn "termite")
-  , ((hhkbCasualMask, xK_x), switchKeyModeTo SH.Common)
+myUnixKeys :: [((KeyMask, KeySym), X ())]
+myUnixKeys =
+  [ ((unixCasualMask .|. altMask, xK_h), windows swapUp)
+  , ((unixCasualMask .|. altMask, xK_l), windows swapDown)
+  , ((unixCasualMask, xK_a), sinkAll)
+  , ((unixCasualMask, xK_c), kill)
+  , ((unixCasualMask, xK_e), spawn "thunar")
+  , ((unixCasualMask, xK_f), spawn "firefox")
+  , ((unixCasualMask, xK_g), sendMessage NextLayout)
+  , ((unixCasualMask, xK_h), windows focusUp)
+  , ((unixCasualMask, xK_i), nextScreen)
+  , ((unixCasualMask, xK_j), withFocused (sendMessage . MergeAll))
+  , ((unixCasualMask, xK_k), withFocused (sendMessage . UnMerge))
+  , ((unixCasualMask, xK_l), windows focusDown)
+  , ((unixCasualMask, xK_m), spawn "xfce4-mixer")
+  , ((unixCasualMask, xK_r), spawn "dmenu_run")
+  , ((unixCasualMask, xK_t), spawn "termite")
+  , ((unixCasualMask, xK_x), switchKeyModeTo SH.Common)
   , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
   , ((superMask, xK_F10), CW.lockScreen)
@@ -142,7 +142,7 @@ myHHKBKeys =
   -- alt + shift + [1-9] to move the current window to the target worskpace
   ++ [((altMask, numKey), windows . shift $ workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
-  ++ [ ((hhkbCasualMask, numKey), windows . greedyView $ workspace)
+  ++ [ ((unixCasualMask, numKey), windows . greedyView $ workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
 
 

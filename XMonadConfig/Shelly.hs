@@ -17,16 +17,16 @@ import XMonad.Core (X, spawn)
 import qualified Data.Text as T
 
 type FilePath'     = forall s. IsString s => s
-data XMonadKeyMode = Common | HHKB
+data XMonadKeyMode = Common | UnixKeymap
 
 
-hhkbKeyModeFlagFile :: FilePath'
-hhkbKeyModeFlagFile = "/tmp/xmonad-keymode-hhkb"
+unixKeymapModeFlagFile :: FilePath'
+unixKeymapModeFlagFile = "/tmp/xmonad-keymode-UnixKeymap"
 
 
 switchKeyModeTo :: XMonadKeyMode -> X ()
-switchKeyModeTo HHKB = liftIO . shelly $ do
-  run_ "touch" [hhkbKeyModeFlagFile]
+switchKeyModeTo UnixKeymap = liftIO . shelly $ do
+  run_ "touch" [unixKeymapModeFlagFile]
   a <- lastExitCode
   run_ "xmonad" ["--restart"]
   b <- lastExitCode
@@ -35,7 +35,7 @@ switchKeyModeTo HHKB = liftIO . shelly $ do
     else run_ "notify-send" ["XMonad", "xmonad restarting is failure"]
 
 switchKeyModeTo Common = liftIO . shelly $ do
-  run_ "rm" ["-f", hhkbKeyModeFlagFile]
+  run_ "rm" ["-f", unixKeymapModeFlagFile]
   run_ "xmonad" ["--restart"]
   a <- lastExitCode
   if a == 0
@@ -44,5 +44,5 @@ switchKeyModeTo Common = liftIO . shelly $ do
 
 
 currentKeyModeIs :: XMonadKeyMode -> IO Bool
-currentKeyModeIs HHKB   = doesFileExist hhkbKeyModeFlagFile
-currentKeyModeIs Common = not <$> doesFileExist hhkbKeyModeFlagFile
+currentKeyModeIs UnixKeymap = doesFileExist unixKeymapModeFlagFile
+currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile
