@@ -5,6 +5,7 @@ My xmonad configuration (xmonad.hs) with haskell-stack
 # How to install
 
 ```shell
+$ git clone {this repository} ~/.xmonad
 $ stack install && xmonad-config-recompile
 ```
 
