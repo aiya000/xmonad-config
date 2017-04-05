@@ -16,9 +16,10 @@ data ScreenShotType = FullScreen | ActiveWindow
 
 
 -- |
--- ImageMagick wrapper with espeak, notify-send and xdotool.
 -- Take screenshot as ScreenShotType to ~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png,
--- and notify finishing with espeak and notify-send
+-- and notify finishing with espeak and notify-send.
+--
+-- Notice: This function depends imagemagick, espeak, notify-send and xdotool
 takeScreenShot :: ScreenShotType -> X ()
 takeScreenShot ssType = do
   let msg = messageOf ssType
