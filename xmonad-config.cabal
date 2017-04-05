@@ -16,6 +16,7 @@ executable xmonad-config
   hs-source-dirs:      .
   main-is:             xmonad.hs
   default-language:    Haskell2010
+  ghc-options:         -Wall -Wno-name-shadowing -Wno-unused-do-bind
   other-modules:       XMonadConfig.CommandWrapper
                      , XMonadConfig.Shelly
                      , XMonadConfig.Types
@@ -33,6 +34,7 @@ executable xmonad-config-recompile
   hs-source-dirs:      .
   main-is:             XMonadRecompile.hs
   default-language:    Haskell2010
+  ghc-options:         -Wall -Wno-name-shadowing -Wno-unused-do-bind
   build-depends:       base
                      , easy-file
                      , filepath
