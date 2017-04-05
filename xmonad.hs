@@ -18,7 +18,7 @@ import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonad.Util.EZConfig (additionalMouseBindings)
 import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonad.Util.Types (Direction2D(..))
-import XMonadConfig.CommandWrapper (takeScreenShot)
+import XMonadConfig.CommandWrapper
 import XMonadConfig.Shelly (switchKeyModeTo, currentKeyModeIs)
 import qualified Data.Map.Lazy as M
 import qualified XMonadConfig.CommandWrapper as CW
@@ -95,6 +95,7 @@ myNormalKeys _ = M.fromList $
   , ((altMask, xK_l), windows focusDown)
   , ((superMask, xK_F1), spawn "light -U 10")
   , ((superMask, xK_F2), spawn "light -A 10")
+  , ((superMask, xK_F3), toggleTouchPad)
   , ((superMask, xK_F4), void $ toggleMute)
   , ((superMask, xK_F5), void $ lowerVolume 5)
   , ((superMask, xK_F6), void $ raiseVolume 5)

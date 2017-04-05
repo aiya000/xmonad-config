@@ -5,13 +5,16 @@ module XMonadConfig.CommandWrapper
   , lockScreen
   , lockScreenSuspend
   , lockScreenHibernate
+  , toggleTouchPad
   ) where
 
 import Control.Concurrent (threadDelay)
 import Control.Monad.IO.Class (liftIO)
+import System.Environment (getEnv)
 import Text.Printf (printf)
 import XMonad.Core (X, spawn)
 
+-- | Be used in `takeScreenShot`
 data ScreenShotType = FullScreen | ActiveWindow
 
 
@@ -36,6 +39,7 @@ takeScreenShot ssType = do
     messageOf FullScreen   = "shot the full screen"
     messageOf ActiveWindow = "shot the active window"
 
+
 -- | `xscreensaver-command -lock`
 lockScreen :: X ()
 lockScreen = spawn "xscreensaver-command -lock"
@@ -51,3 +55,12 @@ lockScreenSuspend = spawn "xscreensaver-command -lock; sleep 2; sudo pm-suspend"
 -- `xscreensaver-command -lock; sleep 2; sudo pm-hibernate`
 lockScreenHibernate :: X ()
 lockScreenHibernate = spawn "xscreensaver-command -lock; sleep 2; sudo pm-hibernate"
+
+
+-- |
+-- Disable touch pad if touch pad is enabled.
+-- Enable touch pad if touch pad is disabled
+toggleTouchPad :: X ()
+toggleTouchPad = do
+  homeDir <- liftIO $ getEnv "HOME"
+  spawn $ homeDir ++ "/.xmonad/bin/trackpad-toggle.sh"
