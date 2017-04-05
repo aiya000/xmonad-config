@@ -20,6 +20,6 @@ and execute `startx`
 
 
 # Another informations
-- `./xmonad{,-contrib,-extras}` are exists for debugging
+- `./xmonad{,-contrib,-extras}` and `X11` are exists for debugging
 - `xmonad-config-recompile` only do what is copying needed files
 - You can quickly restart xmonad-config by `stack install && xmonad-config-recompile && stack exec -- xmonad-config --restart`
