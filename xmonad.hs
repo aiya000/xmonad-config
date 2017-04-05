@@ -109,6 +109,9 @@ myNormalKeys =
   , ((superMask, xK_m), spawn "xfce4-mixer")
   , ((superMask, xK_r), spawn "dmenu_run")
   ]
+  -- Move current window to target worskpace
+  ++ [((altMask, numKey), windows . shift $ workspace)
+     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
 
 myUnixKeys :: [((KeyMask, KeySym), X ())]
 myUnixKeys =
@@ -139,9 +142,7 @@ myUnixKeys =
   , ((superMask, xK_F4), void $ raiseVolume 5)
   , ((superMask, xK_Print), takeScreenShot CW.FullScreen)
   ]
-  -- alt + shift + [1-9] to move the current window to the target worskpace
-  ++ [((altMask, numKey), windows . shift $ workspace)
-     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
+  -- Move current window to target worskpace
   ++ [ ((unixCasualMask, numKey), windows . greedyView $ workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
 
