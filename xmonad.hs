@@ -87,6 +87,7 @@ myNormalKeys _ = M.fromList $
   , ((altMask .|. controlMask, xK_i), nextScreen)
   , ((altMask .|. controlMask, xK_a), sinkAll)
   , ((altMask .|. controlMask, xK_n), sendMessage NextLayout)
+  , ((altMask .|. controlMask, xK_c), kill)
   , ((altMask, xK_h), windows focusUp)
   , ((altMask, xK_j), withFocused $ sendMessage . MergeAll)
   , ((altMask, xK_k), withFocused $ sendMessage . UnMerge)
