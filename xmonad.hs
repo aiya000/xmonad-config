@@ -33,7 +33,7 @@ main = do
   let (myModMask, myKeys) = if inUnixKeymapMode then (unixCasualMask, myUnixKeys)
                                                 else (superMask, myNormalKeys)
   xmonad $ kdeConfig
-    { terminal           = "termite"
+    { terminal           = myTerminal
     , modMask            = myModMask
     , keys               = myKeys
     , borderWidth        = 2
@@ -56,6 +56,9 @@ superMask = mod4Mask
 unixCasualMask :: KeyMask
 unixCasualMask = controlMask .|. shiftMask
 
+
+myTerminal :: String
+myTerminal = "termite"
 
 myLayoutHook = kdeTaskbarMargin $ twoTabbedPane ||| Grid
   where
@@ -106,7 +109,7 @@ myNormalKeys _ = M.fromList $
   , ((superMask, xK_l), withFocused $ keysMoveWindow (5,0))
   , ((superMask, xK_m), spawn "xfce4-mixer")
   , ((superMask, xK_r), spawn "dmenu_run")
-  , ((superMask, xK_t), spawn "termite")
+  , ((superMask, xK_t), spawn myTerminal)
   -- Another KeyMask
   , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
@@ -132,7 +135,7 @@ myUnixKeys _ = M.fromList $
   , ((unixCasualMask, xK_l), windows focusDown)
   , ((unixCasualMask, xK_m), spawn "xfce4-mixer")
   , ((unixCasualMask, xK_r), spawn "dmenu_run")
-  , ((unixCasualMask, xK_t), spawn "termite")
+  , ((unixCasualMask, xK_t), spawn myTerminal)
   , ((unixCasualMask, xK_x), switchKeyModeTo SH.Common)
   , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
