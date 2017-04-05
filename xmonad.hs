@@ -19,7 +19,7 @@ import XMonad.Util.EZConfig (additionalMouseBindings)
 import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonad.Util.Types (Direction2D(..))
 import XMonadConfig.CommandWrapper
-import XMonadConfig.Shelly (switchKeyModeTo, currentKeyModeIs)
+import XMonadConfig.Shelly
 import qualified Data.Map.Lazy as M
 import qualified XMonadConfig.CommandWrapper as CW
 import qualified XMonadConfig.Shelly as SH
@@ -83,12 +83,12 @@ myWorkspaces = map show [1..4]
 
 myNormalKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
 myNormalKeys _ = M.fromList $
-  [ ((altMask .|. controlMask, xK_h), windows swapUp)
-  , ((altMask .|. controlMask, xK_l), windows swapDown)
-  , ((altMask .|. controlMask, xK_i), nextScreen)
-  , ((altMask .|. controlMask, xK_a), sinkAll)
-  , ((altMask .|. controlMask, xK_n), sendMessage NextLayout)
+  [ ((altMask .|. controlMask, xK_a), sinkAll)
   , ((altMask .|. controlMask, xK_c), kill)
+  , ((altMask .|. controlMask, xK_h), windows swapUp)
+  , ((altMask .|. controlMask, xK_i), nextScreen)
+  , ((altMask .|. controlMask, xK_l), windows swapDown)
+  , ((altMask .|. controlMask, xK_n), sendMessage NextLayout)
   , ((altMask, xK_h), windows focusUp)
   , ((altMask, xK_j), withFocused $ sendMessage . MergeAll)
   , ((altMask, xK_k), withFocused $ sendMessage . UnMerge)
@@ -138,16 +138,16 @@ myUnixKeys _ = M.fromList $
   , ((unixCasualMask, xK_r), spawn "dmenu_run")
   , ((unixCasualMask, xK_t), spawn myTerminal)
   , ((unixCasualMask, xK_x), switchKeyModeTo SH.Common)
-  , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
-  , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
-  , ((superMask, xK_F10), CW.lockScreen)
-  , ((superMask, xK_F11), CW.lockScreenSuspend)
-  , ((superMask, xK_F12), CW.lockScreenHibernate)
   , ((superMask, xK_F1), spawn "light -U 10")
   , ((superMask, xK_F2), spawn "light -A 10")
   , ((superMask, xK_F3), void $ lowerVolume 5)
   , ((superMask, xK_F4), void $ raiseVolume 5)
-  , ((superMask, xK_Print), takeScreenShot CW.FullScreen)
+  , ((superMask, xK_F10), CW.lockScreen)
+  , ((superMask, xK_F11), CW.lockScreenSuspend)
+  , ((superMask, xK_F12), CW.lockScreenHibernate)
+  -- Another KeyMask
+  , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
+  , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
   ]
   -- Move current window to target worskpace
   ++ [ ((unixCasualMask, numKey), windows . greedyView $ workspace)
