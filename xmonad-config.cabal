@@ -20,6 +20,7 @@ executable xmonad-config
                      , XMonadConfig.Shelly
                      , XMonadConfig.Types
   build-depends:       base >= 4.7 && < 5
+                     , containers
                      , easy-file
                      , extra
                      , shelly

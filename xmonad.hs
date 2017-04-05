@@ -1,5 +1,6 @@
 import Control.Monad ((>=>), void)
 import Control.Monad.Extra (ifM)
+import Data.Map.Lazy (Map)
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
@@ -16,11 +17,12 @@ import XMonad.Layout.Tabbed (simpleTabbed)
 import XMonad.Layout.TwoPane (TwoPane(TwoPane))
 import XMonad.Operations (sendMessage, withFocused, mouseResizeWindow)
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
-import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
+import XMonad.Util.EZConfig (additionalMouseBindings)
 import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonad.Util.Types (Direction2D(..))
 import XMonadConfig.CommandWrapper (takeScreenShot)
 import XMonadConfig.Shelly (switchKeyModeTo, currentKeyModeIs)
+import qualified Data.Map.Lazy as M
 import qualified XMonadConfig.CommandWrapper as CW
 import qualified XMonadConfig.Shelly as SH
 
@@ -33,6 +35,7 @@ main = do
   xmonad $ kdeConfig
     { terminal           = "termite"
     , modMask            = myModMask
+    , keys               = myKeys
     , borderWidth        = 2
     , layoutHook         = myLayoutHook
     , startupHook        = myStartupHook
@@ -41,7 +44,6 @@ main = do
     , focusFollowsMouse  = False
     , focusedBorderColor = "#0000ff"
     }
-    `additionalKeys` myKeys
     `additionalMouseBindings` myMouseBindings
 
 
@@ -77,16 +79,16 @@ myWorkspaces :: [String]
 myWorkspaces = map show [1..4]
 
 
-myNormalKeys :: [((KeyMask, KeySym), X ())]
-myNormalKeys =
+myNormalKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
+myNormalKeys _ = M.fromList $
   [ ((altMask .|. controlMask, xK_h), windows swapUp)
   , ((altMask .|. controlMask, xK_l), windows swapDown)
   , ((altMask .|. controlMask, xK_i), nextScreen)
   , ((altMask .|. controlMask, xK_a), sinkAll)
   , ((altMask .|. controlMask, xK_n), sendMessage NextLayout)
   , ((altMask, xK_h), windows focusUp)
-  , ((altMask, xK_j), withFocused (sendMessage . MergeAll))
-  , ((altMask, xK_k), withFocused (sendMessage . UnMerge))
+  , ((altMask, xK_j), withFocused $ sendMessage . MergeAll)
+  , ((altMask, xK_k), withFocused $ sendMessage . UnMerge)
   , ((altMask, xK_l), windows focusDown)
   , ((superMask, xK_F1), spawn "light -U 10")
   , ((superMask, xK_F2), spawn "light -A 10")
@@ -114,8 +116,8 @@ myNormalKeys =
   ++ [((altMask, numKey), windows . shift $ workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
 
-myUnixKeys :: [((KeyMask, KeySym), X ())]
-myUnixKeys =
+myUnixKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
+myUnixKeys _ = M.fromList $
   [ ((unixCasualMask .|. altMask, xK_h), windows swapUp)
   , ((unixCasualMask .|. altMask, xK_l), windows swapDown)
   , ((unixCasualMask, xK_a), sinkAll)
@@ -125,8 +127,8 @@ myUnixKeys =
   , ((unixCasualMask, xK_g), sendMessage NextLayout)
   , ((unixCasualMask, xK_h), windows focusUp)
   , ((unixCasualMask, xK_i), nextScreen)
-  , ((unixCasualMask, xK_j), withFocused (sendMessage . MergeAll))
-  , ((unixCasualMask, xK_k), withFocused (sendMessage . UnMerge))
+  , ((unixCasualMask, xK_j), withFocused $ sendMessage . MergeAll)
+  , ((unixCasualMask, xK_k), withFocused $ sendMessage . UnMerge)
   , ((unixCasualMask, xK_l), windows focusDown)
   , ((unixCasualMask, xK_m), spawn "xfce4-mixer")
   , ((unixCasualMask, xK_r), spawn "dmenu_run")
