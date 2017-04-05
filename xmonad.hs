@@ -65,8 +65,10 @@ myLayoutHook = kdeTaskbarMargin $ twoTabbedPane ||| Grid
 
 myStartupHook :: X ()
 myStartupHook = do
+  setWMName "LG3D"  -- Fix to start of Java Swing apps
+  spawnOnce "termite -e tmux"
+  spawnOnce "tmux new-window 'nvim +\"cd ~/.dotfiles\" +terminal'"
   spawnOnce "ksuperkey"
-  setWMName "LG3D"  -- For Java Swing apps starting
 
 myManageHook :: ManageHook
 myManageHook = placeHook (fixed (0.5, 0.5)) <+> manageFloatForTargets
