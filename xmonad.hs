@@ -65,6 +65,7 @@ myLayoutHook = kdeTaskbarMargin $ twoTabbedPane ||| Grid
 
 myStartupHook :: X ()
 myStartupHook = do
+  spawnOnce "ksuperkey"
   setWMName "LG3D"  -- For Java Swing apps starting
 
 myManageHook :: ManageHook
