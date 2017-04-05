@@ -18,6 +18,7 @@ import XMonad.Operations (sendMessage, withFocused, mouseResizeWindow)
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
 import XMonad.Util.SpawnOnce (spawnOnce)
+import XMonad.Util.Types (Direction2D(..))
 import XMonadConfig.CommandWrapper (takeScreenShot)
 import XMonadConfig.Shelly (switchKeyModeTo, currentKeyModeIs)
 import qualified XMonadConfig.CommandWrapper as CW
@@ -54,9 +55,10 @@ unixCasualMask :: KeyMask
 unixCasualMask = controlMask .|. shiftMask
 
 
-myLayoutHook = twoTabbedPane ||| Grid
+myLayoutHook = kdeTaskbarMargin $ twoTabbedPane ||| Grid
   where
-    twoTabbedPane = subTabbed $ TwoPane (1/55) (1/2)
+    kdeTaskbarMargin = gaps [(D, 40)]
+    twoTabbedPane    = subTabbed $ TwoPane (1/55) (1/2)
 
 myStartupHook :: X ()
 myStartupHook = do
