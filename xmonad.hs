@@ -5,8 +5,7 @@ import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
 import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Actions.Volume (toggleMute, lowerVolume, raiseVolume)
-import XMonad.Config.Desktop (desktopConfig)
-import XMonad.Hooks.DynamicLog (xmobar)
+import XMonad.Config.Kde (kdeConfig)
 import XMonad.Hooks.Place (placeHook, fixed)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout (ChangeLayout(FirstLayout,NextLayout))
@@ -30,13 +29,13 @@ main = do
   inUnixKeymapMode <- currentKeyModeIs SH.UnixKeymap
   let (myModMask, myKeys) = if inUnixKeymapMode then (unixCasualMask, myUnixKeys)
                                                 else (superMask, myNormalKeys)
-  (xmobar >=> xmonad) $ desktopConfig
+  xmonad $ kdeConfig
     { terminal           = "termite"
     , modMask            = myModMask
     , borderWidth        = 2
     , layoutHook         = myLayoutHook
     , startupHook        = myStartupHook
-    , manageHook         = myManageHook
+    , manageHook         = manageHook kdeConfig <+> myManageHook
     , workspaces         = myWorkspaces
     , focusFollowsMouse  = False
     , focusedBorderColor = "#0000ff"
@@ -66,10 +65,10 @@ myStartupHook = do
   setWMName "LG3D"  -- For Java Swing apps starting
 
 myManageHook :: ManageHook
-myManageHook = placeHook (fixed (0.5, 0.5)) <+> manageFloatForTargets <+> manageHook desktopConfig
+myManageHook = placeHook (fixed (0.5, 0.5)) <+> manageFloatForTargets
   where
     manageFloatForTargets = composeAll
-      [ --className =? "Gimp" --> doFloat
+      [ className =? "plasmashell" --> doIgnore
       ]
 
 myWorkspaces :: [String]
