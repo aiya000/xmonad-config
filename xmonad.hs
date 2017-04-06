@@ -5,7 +5,7 @@ import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
 import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Actions.Volume (toggleMute, lowerVolume, raiseVolume)
-import XMonad.Config.Kde (kdeConfig)
+import XMonad.Config.Xfce (xfceConfig)
 import XMonad.Hooks.Place (placeHook, fixed)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout (ChangeLayout(..))
@@ -30,14 +30,14 @@ main = do
   inUnixKeymapMode <- currentKeyModeIs SH.UnixKeymap
   let (myModMask, myKeys) = if inUnixKeymapMode then (unixCasualMask, myUnixKeys)
                                                 else (superMask, myNormalKeys)
-  xmonad $ kdeConfig
+  xmonad $ xfceConfig
     { terminal           = myTerminal
     , modMask            = myModMask
     , keys               = myKeys
     , borderWidth        = 2
     , layoutHook         = myLayoutHook
     , startupHook        = myStartupHook
-    , manageHook         = manageHook kdeConfig <+> myManageHook
+    , manageHook         = myManageHook
     , workspaces         = myWorkspaces
     , focusFollowsMouse  = False
     , focusedBorderColor = "#0000ff"
@@ -58,20 +58,16 @@ unixCasualMask = controlMask .|. shiftMask
 myTerminal :: String
 myTerminal = "termite"
 
-myLayoutHook = kdeTaskbarMargin $ twoTabbedPane ||| Grid
+myLayoutHook = taskbarMargin $ twoTabbedPane ||| Grid
   where
-    kdeTaskbarMargin = gaps [(D, 40)]
-    twoTabbedPane    = subTabbed $ TwoPane (1/55) (1/2)
+    taskbarMargin = gaps [(D, 40)]
+    twoTabbedPane = subTabbed $ TwoPane (1/55) (1/2)
 
 myStartupHook :: X ()
 myStartupHook = setWMName "LG3D" -- Fix to start of Java Swing apps
 
 myManageHook :: ManageHook
-myManageHook = placeHook (fixed (0.5, 0.5)) <+> manageFloatForTargets
-  where
-    manageFloatForTargets = composeAll
-      [ className =? "plasmashell" --> doIgnore
-      ]
+myManageHook = placeHook (fixed (0.5, 0.5)) <+> composeAll []
 
 myWorkspaces :: [String]
 myWorkspaces = map show [1..4]
