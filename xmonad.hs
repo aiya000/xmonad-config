@@ -6,7 +6,6 @@ import XMonad.Actions.FloatKeys (keysMoveWindow)
 import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Actions.Volume (toggleMute, lowerVolume, raiseVolume)
 import XMonad.Config.Xfce (xfceConfig)
-import XMonad.Hooks.Place (placeHook, fixed)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout (ChangeLayout(..))
 import XMonad.Layout.Gaps (gaps)
@@ -65,7 +64,7 @@ myStartupHook :: X ()
 myStartupHook = setWMName "LG3D" -- Fix to start of Java Swing apps
 
 myManageHook :: ManageHook
-myManageHook = placeHook (fixed (0.5, 0.5)) <+> composeAll
+myManageHook = composeAll
   [ className =? "Xfce4-panel" --> doIgnore
   , className =? "Xfdesktop"   --> doIgnore
   ]
