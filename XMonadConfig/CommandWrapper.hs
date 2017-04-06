@@ -1,4 +1,4 @@
--- | The cli command wrappers of X
+-- | CLI command wrappers for X
 module XMonadConfig.CommandWrapper
   ( takeScreenShot
   , ScreenShotType (..)
@@ -16,10 +16,10 @@ import System.Environment (getEnv)
 import Text.Printf (printf)
 import XMonad.Core (X, spawn)
 
--- | Be used in `takeScreenShot`
+-- | See `takeScreenShot`
 data ScreenShotType = FullScreen | ActiveWindow
 
--- | Be used in `setKeymapToUS`
+-- | See `setKeymapToUS`
 data XKeyboardLayout = USKeyboardLayout
 
 
@@ -45,21 +45,33 @@ takeScreenShot ssType = do
     messageOf ActiveWindow = "shot the active window"
 
 
--- | Execute `xscreensaver-command -lock`
+-- | Execute xscreensaver-command -lock
 lockScreen :: X ()
 lockScreen = spawn "xscreensaver-command -lock"
 
 -- |
--- If you want to use this, pm-suspend must be added to sudoers without inputting password
--- `xscreensaver-command -lock; sleep 2; sudo pm-suspend`
+-- Execute xscreensaver-command -lock and sudo pm-suspend
+--
+-- Notice: pm-suspend must be added to sudoers with you and NOPASSWD
+--
+-- Dependency: xscreensaver-command, sudo, pm-suspend
 lockScreenSuspend :: X ()
-lockScreenSuspend = spawn "xscreensaver-command -lock; sleep 2; sudo pm-suspend"
+lockScreenSuspend = do
+  lockScreen
+  spawn "sleep 2"
+  spawn "sudo pm-suspend"
 
 -- |
--- If you want to this, pm-hibernate must be added to sudoers without inputting password
--- `xscreensaver-command -lock; sleep 2; sudo pm-hibernate`
+-- Execute xscreensaver-command -lock and sudo pm-hibernate
+--
+-- Notice: pm-hibernate must be added to sudoers with you and NOPASSWD
+--
+-- Dependency: xscreensaver-command, sudo, pm-hibernate
 lockScreenHibernate :: X ()
-lockScreenHibernate = spawn "xscreensaver-command -lock; sleep 2; sudo pm-hibernate"
+lockScreenHibernate = do
+  lockScreen
+  spawn "sleep 2"
+  spawn "sudo pm-hibernate"
 
 
 -- |
