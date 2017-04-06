@@ -1,3 +1,7 @@
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Rank2Types #-}
+
 -- | The cli command wrappers of X
 module XMonadConfig.CommandWrapper
   ( takeScreenShot
@@ -8,10 +12,16 @@ module XMonadConfig.CommandWrapper
   , toggleTouchPad
   , setXKeyboardLayout
   , XKeyboardLayout (..)
+  , XMonadKeyMode (..)
+  , switchKeyModeTo
+  , currentKeyModeIs
   ) where
 
 import Control.Concurrent (threadDelay)
 import Control.Monad.IO.Class (liftIO)
+import Data.String (IsString)
+import Shelly (shelly, run_, lastExitCode)
+import System.EasyFile (doesFileExist)
 import System.Environment (getEnv)
 import Text.Printf (printf)
 import XMonad.Core (X, spawn)
@@ -21,6 +31,12 @@ data ScreenShotType = FullScreen | ActiveWindow
 
 -- | See `setKeymapToUS`
 data XKeyboardLayout = USKeyboardLayout
+
+-- | Polymorphic string
+type FilePath' = forall s. IsString s => s
+
+-- | See `switchKeyModeTo`
+data XMonadKeyMode = Common | UnixKeymap
 
 
 -- |
@@ -41,6 +57,8 @@ takeScreenShot ssType = do
     screenshot ActiveWindow path = spawn $ printf "import -window $(xdotool getwindowfocus -f) %s" path
 
     dateSSPath             = "~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png"
+
+    messageOf :: ScreenShotType -> String
     messageOf FullScreen   = "shot the full screen"
     messageOf ActiveWindow = "shot the active window"
 
@@ -94,3 +112,31 @@ setXKeyboardLayout :: XKeyboardLayout -> X ()
 setXKeyboardLayout USKeyboardLayout = do
   spawn "setxkbmap -layout us -option ctrl:swapcaps"
   spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
+
+
+unixKeymapModeFlagFile :: FilePath'
+unixKeymapModeFlagFile = "/tmp/xmonad-keymode-UnixKeymap"
+
+
+switchKeyModeTo :: XMonadKeyMode -> X ()
+switchKeyModeTo UnixKeymap = liftIO . shelly $ do
+  run_ "touch" [unixKeymapModeFlagFile]
+  a <- lastExitCode
+  run_ "xmonad" ["--restart"]
+  b <- lastExitCode
+  if a == 0 && b == 0
+    then run_ "notify-send" ["XMonad", "Restarted"]
+    else run_ "notify-send" ["XMonad", "xmonad restarting is failure"]
+
+switchKeyModeTo Common = liftIO . shelly $ do
+  run_ "rm" ["-f", unixKeymapModeFlagFile]
+  run_ "xmonad" ["--restart"]
+  a <- lastExitCode
+  if a == 0
+    then run_ "notify-send" ["XMonad", "Restarted"]
+    else run_ "notify-send" ["XMonad", "xmonad restarting is failure"]
+
+
+currentKeyModeIs :: XMonadKeyMode -> IO Bool
+currentKeyModeIs UnixKeymap = doesFileExist unixKeymapModeFlagFile
+currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile

@@ -18,15 +18,13 @@ import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonad.Util.EZConfig (additionalMouseBindings)
 import XMonad.Util.Types (Direction2D(..))
 import XMonadConfig.CommandWrapper
-import XMonadConfig.Shelly
 import qualified Data.Map.Lazy as M
 import qualified XMonadConfig.CommandWrapper as CW
-import qualified XMonadConfig.Shelly as SH
 
 
 main :: IO ()
 main = do
-  inUnixKeymapMode <- currentKeyModeIs SH.UnixKeymap
+  inUnixKeymapMode <- currentKeyModeIs CW.UnixKeymap
   let (myModMask, myKeys) = if inUnixKeymapMode then (unixCasualMask, myUnixKeys)
                                                 else (superMask, myNormalKeys)
   xmonad $ xfceConfig
@@ -107,7 +105,7 @@ myNormalKeys _ = M.fromList $
   -- Another KeyMask
   , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
-  , ((unixCasualMask, xK_x), switchKeyModeTo SH.UnixKeymap)
+  , ((unixCasualMask, xK_x), switchKeyModeTo CW.UnixKeymap)
   ]
   -- Move current window to target worskpace
   ++ [((altMask, numKey), windows . shift $ workspace)
@@ -130,7 +128,7 @@ myUnixKeys _ = M.fromList $
   , ((unixCasualMask, xK_m), spawn "xfce4-mixer")
   , ((unixCasualMask, xK_r), spawn "dmenu_run")
   , ((unixCasualMask, xK_t), spawn myTerminal)
-  , ((unixCasualMask, xK_x), switchKeyModeTo SH.Common)
+  , ((unixCasualMask, xK_x), switchKeyModeTo CW.Common)
   , ((superMask, xK_F1), spawn "light -U 10")
   , ((superMask, xK_F2), spawn "light -A 10")
   , ((superMask, xK_F3), void $ lowerVolume 5)
