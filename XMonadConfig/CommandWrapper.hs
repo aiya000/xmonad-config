@@ -6,6 +6,8 @@ module XMonadConfig.CommandWrapper
   , lockScreenSuspend
   , lockScreenHibernate
   , toggleTouchPad
+  , setXKeyboardLayout
+  , XKeyboardLayout (..)
   ) where
 
 import Control.Concurrent (threadDelay)
@@ -16,6 +18,9 @@ import XMonad.Core (X, spawn)
 
 -- | Be used in `takeScreenShot`
 data ScreenShotType = FullScreen | ActiveWindow
+
+-- | Be used in `setKeymapToUS`
+data XKeyboardLayout = USKeyboardLayout
 
 
 -- |
@@ -64,3 +69,13 @@ toggleTouchPad :: X ()
 toggleTouchPad = do
   homeDir <- liftIO $ getEnv "HOME"
   spawn $ homeDir ++ "/.xmonad/bin/trackpad-toggle.sh"
+
+
+-- |
+-- Change keyboard layout to 'us' and swap ctrl and caps
+--
+-- Dependency: setxkbmap, notify-send
+setXKeyboardLayout :: XKeyboardLayout -> X ()
+setXKeyboardLayout USKeyboardLayout = do
+  spawn "setxkbmap -layout us -option ctrl:swapcaps"
+  spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
