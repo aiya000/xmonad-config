@@ -45,32 +45,33 @@ takeScreenShot ssType = do
     messageOf ActiveWindow = "shot the active window"
 
 
--- | Execute xscreensaver-command -lock
+-- |
+-- Execute xflock4
+--
+-- Dependency: xflock4
 lockScreen :: X ()
-lockScreen = spawn "xscreensaver-command -lock"
+lockScreen = spawn "xflock4"
 
 -- |
 -- Execute xscreensaver-command -lock and sudo pm-suspend
 --
--- Notice: pm-suspend must be added to sudoers with you and NOPASSWD
---
--- Dependency: xscreensaver-command, sudo, pm-suspend
+-- Dependency: xflock4, xfce4-session-logout
 lockScreenSuspend :: X ()
 lockScreenSuspend = do
   lockScreen
-  spawn "sleep 2"
-  spawn "sudo pm-suspend"
+  spawn "xfce4-session-logout --suspend"
 
 -- |
 -- Execute xscreensaver-command -lock and sudo pm-hibernate
 --
 -- Notice: pm-hibernate must be added to sudoers with you and NOPASSWD
 --
--- Dependency: xscreensaver-command, sudo, pm-hibernate
+-- Dependency: xflock4, sudo, pm-hibernate
 lockScreenHibernate :: X ()
 lockScreenHibernate = do
   lockScreen
   spawn "sleep 2"
+  --spawn "xfce4-session-logout --hibernate"  --NOTE: Doesn't work
   spawn "sudo pm-hibernate"
 
 
