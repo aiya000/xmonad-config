@@ -12,7 +12,7 @@ module XMonadConfig.CommandWrapper
   , toggleTouchPad
   , setXKeyboardLayout
   , XKeyboardLayout (..)
-  , XMonadKeyMode (..)
+  , XMonadConfigKeyMode (..)
   , switchKeyModeTo
   , currentKeyModeIs
   ) where
@@ -36,7 +36,7 @@ data XKeyboardLayout = USKeyboardLayout
 type FilePath' = forall s. IsString s => s
 
 -- | See `switchKeyModeTo`
-data XMonadKeyMode = Common | UnixKeymap
+data XMonadConfigKeyMode = Common | UnixKeymap
 
 
 -- |
@@ -114,11 +114,19 @@ setXKeyboardLayout USKeyboardLayout = do
   spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
 
 
+-- |
+-- If this is exists, XMonadConfig.myUnixKeys will be loaded.
+-- Otherwise, XMonadConfig.myNormalKeys will be loaded
 unixKeymapModeFlagFile :: FilePath'
 unixKeymapModeFlagFile = "/tmp/xmonad-keymode-UnixKeymap"
 
 
-switchKeyModeTo :: XMonadKeyMode -> X ()
+-- |
+-- Restart xmonad-config
+-- and load XMonadConfig.myNormalKeys or myUnixKeys
+--
+-- Warning: This is not working fine at now
+switchKeyModeTo :: XMonadConfigKeyMode -> X ()
 switchKeyModeTo UnixKeymap = liftIO . shelly $ do
   run_ "touch" [unixKeymapModeFlagFile]
   a <- lastExitCode
@@ -137,6 +145,9 @@ switchKeyModeTo Common = liftIO . shelly $ do
     else run_ "notify-send" ["XMonad", "xmonad restarting is failure"]
 
 
-currentKeyModeIs :: XMonadKeyMode -> IO Bool
+-- |
+-- Return True if current XMonadConfigKeyMode is specified argument.
+-- Otherwise, return False
+currentKeyModeIs :: XMonadConfigKeyMode -> IO Bool
 currentKeyModeIs UnixKeymap = doesFileExist unixKeymapModeFlagFile
 currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile
