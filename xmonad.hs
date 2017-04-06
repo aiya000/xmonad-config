@@ -65,7 +65,10 @@ myStartupHook :: X ()
 myStartupHook = setWMName "LG3D" -- Fix to start of Java Swing apps
 
 myManageHook :: ManageHook
-myManageHook = placeHook (fixed (0.5, 0.5)) <+> composeAll []
+myManageHook = placeHook (fixed (0.5, 0.5)) <+> composeAll
+  [ className =? "Xfce4-panel" --> doIgnore
+  , className =? "Xfdesktop"   --> doIgnore
+  ]
 
 myWorkspaces :: [String]
 myWorkspaces = map show [1..4]
