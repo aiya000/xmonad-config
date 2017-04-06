@@ -1,3 +1,17 @@
 #!/bin/bash
-# See https://wiki.archlinuxjp.org/index.php/Synaptics_%E3%82%BF%E3%83%83%E3%83%81%E3%83%91%E3%83%83%E3%83%89#.E3.82.BD.E3.83.95.E3.83.88.E3.82.A6.E3.82.A7.E3.82.A2.E3.83.88.E3.82.B0.E3.83.AB
-synclient TouchpadOff=$(synclient -l | grep -c 'TouchpadOff.*=.*0')
+
+# $XMONAD_CONFIG_TOUCHPAD_DEVICE_NAME should be set in some script
+# Ex: ~/.config/plasma-workspace/env/set_window_manager.sh (KDE)
+
+touchpadDeviceId="$(xinput list | grep "$XMONAD_CONFIG_TOUCHPAD_DEVICE_NAME" | sed -r 's/^.*id=(\w+).*$/\1/')"
+if [[ $touchpadDeviceId == '' ]] ; then
+	notify-send "Your touch pad device ($XMONAD_CONFIG_TOUCHPAD_DEVICE_NAME) is not found in 'xinput list'"
+	exit 1
+fi
+
+touchpadIsEnabled="$(xinput list-props "$touchpadDeviceId" | grep 'Device Enabled' | sed -r 's/^\s+Device Enabled.*(.)$/\1/')"
+if [[ $touchpadIsEnabled = 1 ]] ; then
+	xinput disable "$touchpadDeviceId"
+else
+	xinput enable "$touchpadDeviceId"
+fi
