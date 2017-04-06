@@ -25,9 +25,9 @@ data XKeyboardLayout = USKeyboardLayout
 
 -- |
 -- Take screenshot as ScreenShotType to ~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png,
--- and notify finishing with espeak and notify-send.
+-- and notify to finish as screen and voice message
 --
--- Notice: This function depends imagemagick, espeak, notify-send and xdotool
+-- Dependency: imagemagick, espeak, notify-send, xdotool
 takeScreenShot :: ScreenShotType -> X ()
 takeScreenShot ssType = do
   let msg = messageOf ssType
@@ -45,7 +45,7 @@ takeScreenShot ssType = do
     messageOf ActiveWindow = "shot the active window"
 
 
--- | `xscreensaver-command -lock`
+-- | Execute `xscreensaver-command -lock`
 lockScreen :: X ()
 lockScreen = spawn "xscreensaver-command -lock"
 
@@ -65,6 +65,8 @@ lockScreenHibernate = spawn "xscreensaver-command -lock; sleep 2; sudo pm-hibern
 -- |
 -- Disable touch pad if touch pad is enabled.
 -- Enable touch pad if touch pad is disabled
+--
+-- Notice: This is not working fine if you link this repository to other than ~/.xmonad
 toggleTouchPad :: X ()
 toggleTouchPad = do
   homeDir <- liftIO $ getEnv "HOME"
