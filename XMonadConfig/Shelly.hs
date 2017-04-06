@@ -10,10 +10,9 @@ module XMonadConfig.Shelly
 
 import Control.Monad.IO.Class (liftIO)
 import Data.String (IsString)
-import Data.Text (Text)
 import Shelly (shelly, run_, lastExitCode)
 import System.EasyFile (doesFileExist)
-import XMonad.Core (X, spawn)
+import XMonad.Core (X)
 import qualified Data.Text as T
 
 type FilePath'     = forall s. IsString s => s

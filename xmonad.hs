@@ -16,7 +16,6 @@ import XMonad.Layout.TwoPane (TwoPane(..))
 import XMonad.Operations (sendMessage, withFocused, mouseResizeWindow)
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonad.Util.EZConfig (additionalMouseBindings)
-import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonad.Util.Types (Direction2D(..))
 import XMonadConfig.CommandWrapper
 import XMonadConfig.Shelly
