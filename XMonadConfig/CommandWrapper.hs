@@ -45,25 +45,21 @@ takeScreenShot ssType = do
     messageOf ActiveWindow = "shot the active window"
 
 
--- | Send screen lock signal to UPower
+-- | Execute `xscreensaver-command -lock`
 lockScreen :: X ()
-lockScreen = spawn "qdbus org.freedesktop.ScreenSaver /ScreenSaver Lock"
-
--- | Send screen suspend signal to KDE
-lockScreenSuspend :: X ()
-lockScreenSuspend = spawn "qdbus org.kde.Solid.PowerManagement /org/freedesktop/PowerManagement Suspend"
+lockScreen = spawn "xscreensaver-command -lock"
 
 -- |
--- Execute 'sudo pm-hibernate',
--- and send screen suspend signal to UPower
---
--- Notice: pm-hibernate must be added to /etc/sudoers with NOPASSWD
---
--- Dependency: pm-hibernate
+-- If you want to use this, pm-suspend must be added to sudoers without inputting password
+-- `xscreensaver-command -lock; sleep 2; sudo pm-suspend`
+lockScreenSuspend :: X ()
+lockScreenSuspend = spawn "xscreensaver-command -lock; sleep 2; sudo pm-suspend"
+
+-- |
+-- If you want to this, pm-hibernate must be added to sudoers without inputting password
+-- `xscreensaver-command -lock; sleep 2; sudo pm-hibernate`
 lockScreenHibernate :: X ()
-lockScreenHibernate = do
-  spawn "sudo pm-hibernate"
-  lockScreen
+lockScreenHibernate = spawn "xscreensaver-command -lock; sleep 2; sudo pm-hibernate"
 
 
 -- |
