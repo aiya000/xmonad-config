@@ -28,14 +28,3 @@ executable xmonad-config
                      , xmonad
                      , xmonad-contrib
                      , xmonad-extras
-
-executable xmonad-config-recompile
-  hs-source-dirs:      .
-  main-is:             XMonadRecompile.hs
-  default-language:    Haskell2010
-  ghc-options:         -Wall -Wno-name-shadowing -Wno-unused-do-bind
-  build-depends:       base
-                     , easy-file
-                     , filepath
-                     , shelly
-                     , text
