@@ -15,12 +15,14 @@ module XMonadConfig.CommandWrapper
   , XMonadConfigKeyMode (..)
   , switchKeyModeTo
   , currentKeyModeIs
+  , restartXMonadConfig
   ) where
 
 import Control.Concurrent (threadDelay)
+import Control.Monad (when, void)
 import Control.Monad.IO.Class (liftIO)
 import Data.String (IsString)
-import Shelly (shelly, run_, lastExitCode)
+import Shelly (Sh, shelly, run_, lastExitCode)
 import System.EasyFile (doesFileExist)
 import System.Environment (getEnv)
 import Text.Printf (printf)
@@ -114,12 +116,30 @@ setXKeyboardLayout USKeyboardLayout = do
   spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
 
 
+-- | Instead of '&&' in shelly
+continueIfSucceed :: Sh a -> Sh b -> Sh a
+x `continueIfSucceed` y = do
+  result   <- x
+  exitCode <- lastExitCode
+  when (exitCode == 0) $ void y
+  return result
+infixl 3 `continueIfSucceed`
+
+-- | Instead of '||' in shelly
+continueIfFailed :: Sh a -> Sh b -> Sh a
+x `continueIfFailed` y = do
+  result   <- x
+  exitCode <- lastExitCode
+  when (exitCode /= 0) $ void y
+  return result
+infixl 3 `continueIfFailed`
+
+
 -- |
 -- If this is exists, XMonadConfig.myUnixKeys will be loaded.
 -- Otherwise, XMonadConfig.myNormalKeys will be loaded
 unixKeymapModeFlagFile :: FilePath'
 unixKeymapModeFlagFile = "/tmp/xmonad-keymode-UnixKeymap"
-
 
 -- |
 -- Restart xmonad-config
@@ -151,3 +171,20 @@ switchKeyModeTo Common = liftIO . shelly $ do
 currentKeyModeIs :: XMonadConfigKeyMode -> IO Bool
 currentKeyModeIs UnixKeymap = doesFileExist unixKeymapModeFlagFile
 currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile
+
+
+-- |
+-- Reinstall xmonad-config.
+-- If reinstalling is failed, notify it to notifyd
+--
+-- Dependency: notify-send
+restartXMonadConfig :: X ()
+restartXMonadConfig = liftIO . shelly . void $ body `continueIfFailed` notifyFailure
+  where
+    body = do
+      run_ "cd" ["~/.xmonad"]
+      `continueIfSucceed` run_ "stack" ["install"]
+      `continueIfSucceed` run_ "xmonad-config" ["--recompile"]
+      `continueIfSucceed` run_ "xmonad-config" ["--restart"]
+    notifyFailure = do
+      run_ "notify-send" ["xmonad restarting is failed"]

@@ -84,7 +84,7 @@ myNormalKeys _ = M.fromList $
   , ((altMask .|. controlMask, xK_l), windows swapDown)
   , ((altMask .|. controlMask, xK_n), sendMessage NextLayout)
   , ((altMask .|. controlMask, xK_k), setXKeyboardLayout USKeyboardLayout)
-  , ((altMask .|. controlMask, xK_q), spawn "xmonad-config --recompile && xmonad-config --restart")
+  , ((altMask .|. controlMask, xK_q), restartXMonadConfig)
   , ((altMask, xK_h), windows focusUp)
   , ((altMask, xK_j), withFocused $ sendMessage . MergeAll)
   , ((altMask, xK_k), withFocused $ sendMessage . UnMerge)
