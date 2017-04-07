@@ -9,6 +9,8 @@ $ git clone {this repository} ~/.xmonad
 $ stack install
 ```
 
+- `$XMONAD_CONFIG_DIR` maybe able to use instead of `~/.xmonad` (I have not checked)
+
 
 # How to use
 Add the following this line into your .xinitrc
