@@ -6,7 +6,7 @@ My xmonad configuration (xmonad.hs) with haskell-stack
 
 ```shell
 $ git clone {this repository} ~/.xmonad
-$ stack install && xmonad-config-recompile
+$ stack install
 ```
 
 
@@ -21,6 +21,4 @@ and execute `startx`
 
 
 # Another informations
-- `./xmonad{,-contrib,-extras}` and `X11` are exists for debugging
-- `xmonad-config-recompile` only do what is copying needed files
-- You can quickly restart xmonad-config by `stack install && xmonad-config-recompile && stack exec -- xmonad-config --restart`
+- `./xmonad{,-contrib,-extras}` and `X11` are used by haskell-stack and `xmonad-config --recompile`
