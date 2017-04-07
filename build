@@ -1,3 +1,6 @@
 #!/bin/bash
-cd ~/.xmonad
-stack build
+
+bin_name=$(uname -a | awk '{print $1, $13}' | sed -r 's/(.+) (.+)/xmonad-\2-\L\1/')  # I checked in only x86_64 env
+
+cd ~/.xmonad || exit 1
+stack build && rm "$bin_name" && cp "$(find .stack-work/install -type f -name xmonad-config)" "$bin_name"
