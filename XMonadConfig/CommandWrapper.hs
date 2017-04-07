@@ -135,6 +135,11 @@ x `continueIfFailed` y = do
 infixl 3 `continueIfFailed`
 
 
+-- | Execute `Sh a` in X monad context
+runShellyOnX :: Sh a -> X ()
+runShellyOnX = liftIO . shelly . void
+
+
 -- |
 -- If this is exists, XMonadConfig.myUnixKeys will be loaded.
 -- Otherwise, XMonadConfig.myNormalKeys will be loaded
@@ -147,22 +152,19 @@ unixKeymapModeFlagFile = "/tmp/xmonad-keymode-UnixKeymap"
 --
 -- Warning: This is not working fine at now
 switchKeyModeTo :: XMonadConfigKeyMode -> X ()
-switchKeyModeTo UnixKeymap = liftIO . shelly $ do
-  run_ "touch" [unixKeymapModeFlagFile]
-  a <- lastExitCode
-  run_ "xmonad" ["--restart"]
-  b <- lastExitCode
-  if a == 0 && b == 0
-    then run_ "notify-send" ["XMonad", "Restarted"]
-    else run_ "notify-send" ["XMonad", "xmonad restarting is failure"]
+switchKeyModeTo UnixKeymap = runShellyOnX $ body `continueIfFailed` notifyFailure
+  where
+    body = run_ "touch" [unixKeymapModeFlagFile]
+      `continueIfSucceed` run_ "xmonad" ["--restart"]
+      `continueIfSucceed` run_ "notify-send" ["XMonad", "restarted"]
+    notifyFailure = run_ "notify-send" ["XMonad", "xmonad restarting is failed"]
 
-switchKeyModeTo Common = liftIO . shelly $ do
-  run_ "rm" ["-f", unixKeymapModeFlagFile]
-  run_ "xmonad" ["--restart"]
-  a <- lastExitCode
-  if a == 0
-    then run_ "notify-send" ["XMonad", "Restarted"]
-    else run_ "notify-send" ["XMonad", "xmonad restarting is failure"]
+switchKeyModeTo Common = runShellyOnX $ body `continueIfFailed` notifyFailure
+  where
+    body = run_ "rm" ["-f", unixKeymapModeFlagFile]
+      `continueIfSucceed` run_ "xmonad" ["--restart"]
+      `continueIfSucceed` run_ "notify-send" ["XMonad", "restarted"]
+    notifyFailure = run_ "notify-send" ["XMonad", "xmonad restarting is failed"]
 
 
 -- |
@@ -179,12 +181,10 @@ currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile
 --
 -- Dependency: notify-send
 restartXMonadConfig :: X ()
-restartXMonadConfig = liftIO . shelly . void $ body `continueIfFailed` notifyFailure
+restartXMonadConfig = runShellyOnX $ body `continueIfFailed` notifyFailure
   where
-    body = do
-      run_ "cd" ["~/.xmonad"]
+    body = run_ "cd" ["~/.xmonad"]
       `continueIfSucceed` run_ "stack" ["install"]
       `continueIfSucceed` run_ "xmonad-config" ["--recompile"]
       `continueIfSucceed` run_ "xmonad-config" ["--restart"]
-    notifyFailure = do
-      run_ "notify-send" ["xmonad restarting is failed"]
+    notifyFailure = run_ "notify-send" ["XMonad", "xmonad restarting is failed"]
