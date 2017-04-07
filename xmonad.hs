@@ -5,7 +5,8 @@ import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
 import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Actions.Volume (toggleMute, lowerVolume, raiseVolume)
-import XMonad.Config.Xfce (xfceConfig)
+import XMonad.Config.Desktop (desktopConfig)
+import XMonad.Hooks.ManageDocks (ToggleStruts(..))
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout (ChangeLayout(..))
 import XMonad.Layout.Gaps (gaps)
@@ -26,7 +27,7 @@ main = do
   inUnixKeymapMode <- currentKeyModeIs CW.UnixKeymap
   let (myModMask, myKeys) = if inUnixKeymapMode then (unixCasualMask, myUnixKeys)
                                                 else (superMask, myNormalKeys)
-  xmonad $ xfceConfig
+  xmonad $ desktopConfig
     { terminal           = myTerminal
     , modMask            = myModMask
     , keys               = myKeys
