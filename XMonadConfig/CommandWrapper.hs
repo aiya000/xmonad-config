@@ -42,27 +42,12 @@ data XMonadConfigKeyMode = Common | UnixKeymap
 
 
 -- |
--- Take screenshot as ScreenShotType to ~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png,
--- and notify to finish as screen and voice message
+-- Take screenshot by xfce4-screenshooter
 --
--- Dependency: imagemagick, espeak, notify-send, xdotool
+-- Dependency: xfce4-screenshooter
 takeScreenShot :: ScreenShotType -> X ()
-takeScreenShot ssType = do
-  let msg = messageOf ssType
-  screenshot ssType dateSSPath
-  spawn  $ printf "espeak -s 150 -v +fex '%s'" msg
-  liftIO $ threadDelay 1000000  -- Wait 1 sec
-  spawn  $ printf "notify-send 'ScreenShot' '%s'" msg
-  where
-    screenshot :: ScreenShotType -> FilePath -> X ()
-    screenshot FullScreen   path = spawn $ printf "import -window root %s" path
-    screenshot ActiveWindow path = spawn $ printf "import -window $(xdotool getwindowfocus -f) %s" path
-
-    dateSSPath             = "~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png"
-
-    messageOf :: ScreenShotType -> String
-    messageOf FullScreen   = "shot the full screen"
-    messageOf ActiveWindow = "shot the active window"
+takeScreenShot FullScreen   = spawn "xfce4-screenshooter --mouse --window"
+takeScreenShot ActiveWindow = spawn "xfce4-screenshooter --mouse --fullscreen"
 
 
 -- |
