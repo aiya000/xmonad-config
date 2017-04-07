@@ -155,16 +155,16 @@ switchKeyModeTo :: XMonadConfigKeyMode -> X ()
 switchKeyModeTo UnixKeymap = runShellyOnX $ body `continueIfFailed` notifyFailure
   where
     body = run_ "touch" [unixKeymapModeFlagFile]
-      `continueIfSucceed` run_ "xmonad" ["--restart"]
+      `continueIfSucceed` run_ "xmonad-config" ["--restart"]
       `continueIfSucceed` run_ "notify-send" ["XMonad", "restarted"]
-    notifyFailure = run_ "notify-send" ["XMonad", "xmonad restarting is failed"]
+    notifyFailure = run_ "notify-send" ["XMonad", "xmonad-config restarting is failed"]
 
 switchKeyModeTo Common = runShellyOnX $ body `continueIfFailed` notifyFailure
   where
     body = run_ "rm" ["-f", unixKeymapModeFlagFile]
-      `continueIfSucceed` run_ "xmonad" ["--restart"]
+      `continueIfSucceed` run_ "xmonad-config" ["--restart"]
       `continueIfSucceed` run_ "notify-send" ["XMonad", "restarted"]
-    notifyFailure = run_ "notify-send" ["XMonad", "xmonad restarting is failed"]
+    notifyFailure = run_ "notify-send" ["XMonad", "xmonad-config restarting is failed"]
 
 
 -- |
