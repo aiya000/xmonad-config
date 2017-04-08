@@ -1,4 +1,5 @@
 {-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE Rank2Types #-}
 
@@ -20,13 +21,18 @@ module XMonadConfig.CommandWrapper
 
 import Control.Concurrent (threadDelay)
 import Control.Monad (when, void)
-import Control.Monad.IO.Class (liftIO)
-import Data.String (IsString)
-import Shelly (Sh, shelly, run_, lastExitCode)
+import Control.Monad.IO.Class (MonadIO, liftIO)
+import Data.Monoid ((<>))
+import Data.String (IsString, fromString)
+import Data.Text (Text)
+import Data.Typeable (cast)
+import Shelly (Sh, shelly, run_, lastExitCode, exit, (</>), fromText)
 import System.EasyFile (doesFileExist)
 import System.Environment (getEnv)
 import Text.Printf (printf)
 import XMonad.Core (X, spawn)
+import qualified Data.Text as T
+import qualified Shelly as SH
 
 -- | See `takeScreenShot`
 data ScreenShotType = FullScreen | ActiveWindow
@@ -39,6 +45,15 @@ type FilePath' = forall s. IsString s => s
 
 -- | See `switchKeyModeTo`
 data XMonadConfigKeyMode = Common | UnixKeymap
+
+
+-- |
+-- Shortcut for @$HOME@ .
+-- Apply @$HOME@ to @f@
+inHomeDir :: MonadIO m => (FilePath' -> m a) -> m a
+inHomeDir f = do
+  homeDir <- liftIO $ getEnv "HOME"
+  f $ fromString homeDir
 
 
 -- |
@@ -86,8 +101,7 @@ lockScreenHibernate = do
 --
 -- Notice: This is not working fine if you link this repository to other than ~/.xmonad
 toggleTouchPad :: X ()
-toggleTouchPad = do
-  homeDir <- liftIO $ getEnv "HOME"
+toggleTouchPad = inHomeDir $ \homeDir -> do
   spawn $ homeDir ++ "/.xmonad/bin/trackpad-toggle.sh"
 
 
@@ -166,10 +180,21 @@ currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile
 --
 -- Dependency: notify-send
 restartXMonadConfig :: X ()
-restartXMonadConfig = runShellyOnX $ body `continueIfFailed` notifyFailure
+restartXMonadConfig = runShellyOnX . inHomeDir' $ \homeDir' -> do
+  body (cast' homeDir') `continueIfFailed` notifyFailure
   where
-    body = run_ "cd" ["~/.xmonad"]
-      `continueIfSucceed` run_ "stack" ["install"]
-      `continueIfSucceed` run_ "xmonad-config" ["--recompile"]
-      `continueIfSucceed` run_ "xmonad-config" ["--restart"]
+    inHomeDir' :: (FilePath -> Sh ()) -> Sh ()
+    inHomeDir' = inHomeDir
+
+    cast' :: FilePath -> Maybe SH.FilePath
+    cast' = cast
+
+    body :: Maybe SH.FilePath -> Sh ()
+    body Nothing = exit 1
+    body (Just homeDir) = do
+      let buildScript = homeDir </> "/build"
+      run_ "notify-send" ["XMonad", "xmonad restarteding is started"]
+        `continueIfSucceed` run_ buildScript []
+        `continueIfSucceed` run_ "notify-send" ["XMonad", "xmonad restarting is done"]
+
     notifyFailure = run_ "notify-send" ["XMonad", "xmonad restarting is failed"]
