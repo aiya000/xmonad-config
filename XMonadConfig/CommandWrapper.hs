@@ -19,19 +19,14 @@ module XMonadConfig.CommandWrapper
   , restartXMonadConfig
   ) where
 
-import Control.Concurrent (threadDelay)
 import Control.Monad (when, void)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Data.Monoid ((<>))
 import Data.String (IsString, fromString)
-import Data.Text (Text)
 import Data.Typeable (cast)
-import Shelly (Sh, shelly, run_, lastExitCode, exit, (</>), fromText)
+import Shelly (Sh, shelly, run_, lastExitCode, exit, (</>))
 import System.EasyFile (doesFileExist)
 import System.Environment (getEnv)
-import Text.Printf (printf)
 import XMonad.Core (X, spawn)
-import qualified Data.Text as T
 import qualified Shelly as SH
 
 -- | See `takeScreenShot`
