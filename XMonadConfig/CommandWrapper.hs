@@ -45,8 +45,8 @@ data XMonadConfigKeyMode = Common | UnixKeymap
 -- |
 -- Shortcut for @$HOME@ .
 -- Apply @$HOME@ to @f@
-inHomeDir :: MonadIO m => (FilePath' -> m a) -> m a
-inHomeDir f = do
+withHomeDir :: MonadIO m => (FilePath' -> m a) -> m a
+withHomeDir f = do
   homeDir <- liftIO $ getEnv "HOME"
   f $ fromString homeDir
 
@@ -96,7 +96,7 @@ lockScreenHibernate = do
 --
 -- Notice: This is not working fine if you link this repository to other than ~/.xmonad
 toggleTouchPad :: X ()
-toggleTouchPad = inHomeDir $ \homeDir -> do
+toggleTouchPad = withHomeDir $ \homeDir -> do
   spawn $ homeDir ++ "/.xmonad/bin/trackpad-toggle.sh"
 
 
@@ -175,11 +175,11 @@ currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile
 --
 -- Dependency: notify-send
 restartXMonadConfig :: X ()
-restartXMonadConfig = runShellyOnX . inHomeDir' $ \homeDir' -> do
+restartXMonadConfig = runShellyOnX . withHomeDir' $ \homeDir' -> do
   body (cast' homeDir') `continueIfFailed` notifyFailure
   where
-    inHomeDir' :: (FilePath -> Sh ()) -> Sh ()
-    inHomeDir' = inHomeDir
+    withHomeDir' :: (FilePath -> Sh ()) -> Sh ()
+    withHomeDir' = withHomeDir
 
     cast' :: FilePath -> Maybe SH.FilePath
     cast' = cast
