@@ -3,8 +3,8 @@
 # $XMONAD_CONFIG_TOUCHPAD_DEVICE_NAME should be set in some script
 # Ex: ~/.config/plasma-workspace/env/set_window_manager.sh (KDE)
 
-touchpadDeviceId="$(xinput list | grep "$XMONAD_CONFIG_TOUCHPAD_DEVICE_NAME" | sed -r 's/^.*id=(\w+).*$/\1/')"
-if [[ $touchpadDeviceId == '' ]] ; then
+touchpadDeviceId="$(xinput list --id-only "$XMONAD_CONFIG_TOUCHPAD_DEVICE_NAME")"
+if [[ $? -ne 0 ]] ; then
 	notify-send "Your touch pad device ($XMONAD_CONFIG_TOUCHPAD_DEVICE_NAME) is not found in 'xinput list'"
 	exit 1
 fi
