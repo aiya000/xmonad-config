@@ -113,7 +113,7 @@ myNormalKeys _ = M.fromList $
   , ((unixCasualMask, xK_x), switchKeyModeTo CW.UnixKeymap)
   ]
   -- Move current window to target worskpace
-  ++ [((altMask, numKey), windows . shift $ workspace)
+  ++ [((superMask, numKey), windows . shift $ workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
 
 myUnixKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
