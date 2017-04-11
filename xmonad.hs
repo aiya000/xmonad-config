@@ -112,8 +112,11 @@ myNormalKeys _ = M.fromList $
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
   , ((unixCasualMask, xK_x), switchKeyModeTo CW.UnixKeymap)
   ]
+  -- Switch workspace
+  ++ [ ((altMask .|. controlMask, numKey), windows $ greedyView workspace)
+     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
   -- Move current window to target worskpace
-  ++ [((superMask, numKey), windows . shift $ workspace)
+  ++ [((superMask, numKey), windows $ shift workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
 
 myUnixKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
@@ -145,8 +148,11 @@ myUnixKeys _ = M.fromList $
   , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
   ]
+  -- Switch workspace
+  ++ [ ((unixCasualMask, numKey), windows $ greedyView workspace)
+     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
   -- Move current window to target worskpace
-  ++ [ ((unixCasualMask, numKey), windows . greedyView $ workspace)
+  ++ [((altMask, numKey), windows $ shift workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
 
 
