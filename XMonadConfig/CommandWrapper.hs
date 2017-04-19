@@ -25,7 +25,7 @@ import Data.String (IsString, fromString)
 import Data.Typeable (cast)
 import Shelly (Sh, shelly, run_, lastExitCode, exit, (</>))
 import System.EasyFile (doesFileExist)
-import System.Environment (getEnv)
+import System.Environment (getEnv, lookupEnv)
 import XMonad.Core (X, spawn)
 import qualified Shelly as SH
 
@@ -101,13 +101,22 @@ toggleTouchPad = withHomeDir $ \homeDir -> do
 
 
 -- |
--- Change keyboard layout to 'us' and swap ctrl and caps
+-- 
+-- Change keyboard layout to 'us'.
+-- And read a value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS,
+-- apply it.
+--
+-- The example value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS is '-option caps:ctrl_modifier'
 --
 -- Dependency: setxkbmap, notify-send
 setXKeyboardLayout :: XKeyboardLayout -> X ()
 setXKeyboardLayout USKeyboardLayout = do
-  spawn "setxkbmap -layout us -option ctrl:swapcaps"
-  spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
+  maybeOpt <- liftIO $ lookupEnv "XMONAD_CONFIG_SETXKBMAP_OPTIONS"
+  case maybeOpt of
+    Nothing  -> spawn "notify-send 'Failed' 'XMONAD_CONFIG_SETXKBMAP_OPTIONS is not set'"
+    Just opt -> do
+      spawn $ "setxkbmap -layout us " ++ opt
+      spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
 
 
 -- | Instead of '&&' in shelly
