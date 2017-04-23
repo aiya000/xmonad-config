@@ -83,7 +83,6 @@ myNormalKeys _ = M.fromList $
   , ((altMask .|. controlMask, xK_i), nextScreen)
   , ((altMask .|. controlMask, xK_l), windows swapDown)
   , ((altMask .|. controlMask, xK_n), sendMessage NextLayout)
-  , ((altMask .|. controlMask, xK_k), setXKeyboardLayout USKeyboardLayout)
   , ((altMask .|. controlMask, xK_q), restartXMonadConfig)
   , ((altMask, xK_h), windows focusUp)
   , ((altMask, xK_j), withFocused $ sendMessage . MergeAll)
@@ -108,6 +107,7 @@ myNormalKeys _ = M.fromList $
   , ((superMask, xK_r), spawn "dmenu_run")
   , ((superMask, xK_t), spawn myTerminal)
   -- Another KeyMask
+  , ((noModMask, xK_F1), setXKeyboardLayout USKeyboardLayout)
   , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
   , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
   , ((unixCasualMask, xK_x), switchKeyModeTo CW.UnixKeymap)
