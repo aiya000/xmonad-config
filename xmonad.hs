@@ -158,5 +158,5 @@ myUnixKeys _ = M.fromList $
 
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =
-  [ ((altMask, button1), mouseResizeWindow)
+  [ ((altMask .|. controlMask, button1), mouseResizeWindow)
   ]
