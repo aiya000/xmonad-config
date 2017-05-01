@@ -11,7 +11,7 @@ module XMonadConfig.CommandWrapper
   , lockScreenSuspend
   , lockScreenHibernate
   , toggleTouchPad
-  , setXKeyboardLayout
+  , resetXKeyboardLayout
   , XKeyboardLayout (..)
   , XMonadConfigKeyMode (..)
   , switchKeyModeTo
@@ -109,13 +109,14 @@ toggleTouchPad = withHomeDir $ \homeDir -> do
 -- The example value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS is '-option caps:ctrl_modifier'
 --
 -- Dependency: setxkbmap, notify-send
-setXKeyboardLayout :: XKeyboardLayout -> X ()
-setXKeyboardLayout USKeyboardLayout = do
+resetXKeyboardLayout :: XKeyboardLayout -> X ()
+resetXKeyboardLayout USKeyboardLayout = do
   maybeOpt <- liftIO $ lookupEnv "XMONAD_CONFIG_SETXKBMAP_OPTIONS"
   case maybeOpt of
     Nothing  -> spawn "notify-send 'Failed' 'XMONAD_CONFIG_SETXKBMAP_OPTIONS is not set'"
     Just opt -> do
       spawn $ "setxkbmap -layout us " ++ opt
+      spawn $ "xmodmap ~/.Xmodmap"
       spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
 
 
