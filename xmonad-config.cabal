@@ -27,4 +27,3 @@ executable xmonad-config
                      , text
                      , xmonad
                      , xmonad-contrib
-                     , xmonad-extras

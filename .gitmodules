@@ -1,6 +1,3 @@
-[submodule "xmonad-extras"]
-	path = xmonad-extras
-	url = https://github.com/aiya000/xmonad-extras
 [submodule "xmonad"]
 	path = xmonad
 	url = https://github.com/xmonad/xmonad

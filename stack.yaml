@@ -1,7 +1,4 @@
 flags:
-  xmonad-extras:
-    with_hint: false
-    with_mpd: false
   xmonad-contrib:
     use_xft: false
 extra-package-dbs: []
@@ -9,7 +6,6 @@ packages:
 - '.'
 - xmonad/
 - xmonad-contrib/
-- xmonad-extras/
 extra-deps:
 - X11-1.8
 - alsa-core-0.5.0.1
