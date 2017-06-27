@@ -1,4 +1,3 @@
-{-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE Rank2Types #-}
@@ -19,6 +18,7 @@ module XMonadConfig.CommandWrapper
   , restartXMonadConfig
   ) where
 
+import Control.Concurrent (threadDelay)
 import Control.Monad (when, void)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.String (IsString, fromString)
@@ -26,6 +26,7 @@ import Data.Typeable (cast)
 import Shelly (Sh, shelly, run_, lastExitCode, exit, (</>))
 import System.EasyFile (doesFileExist)
 import System.Environment (getEnv, lookupEnv)
+import Text.Printf (printf)
 import XMonad.Core (X, spawn)
 import qualified Shelly as SH
 
