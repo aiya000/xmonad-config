@@ -34,7 +34,7 @@ import qualified Shelly as SH
 data ScreenShotType = FullScreen | ActiveWindow
 
 -- | See `setKeymapToUS`
-data XKeyboardLayout = USKeyboardLayout
+data XKeyboardLayout = USKeyboardLayout | ResetSetXKBMAP
 
 -- | Polymorphic string
 type FilePath' = forall s. IsString s => s
@@ -118,9 +118,10 @@ toggleTouchPad = withHomeDir $ \homeDir -> do
 
 -- |
 -- 
--- Change keyboard layout to 'us'.
--- And read a value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS,
--- apply it.
+-- Change keyboard layout.
+--
+-- Read a value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS,
+-- and apply it.
 --
 -- The example value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS is '-option caps:ctrl_modifier'
 --
@@ -134,6 +135,9 @@ resetXKeyboardLayout USKeyboardLayout = do
       spawn $ "setxkbmap -layout us " ++ opt
       spawn $ "xmodmap ~/.Xmodmap"
       spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
+resetXKeyboardLayout ResetSetXKBMAP = do
+  spawn "notify-send 'Keyboard Layout' 'KEYMAP is reset'"
+  spawn "setxkbmap -option"
 
 
 -- | Instead of '&&' in shelly
