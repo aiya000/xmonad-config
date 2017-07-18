@@ -5,7 +5,7 @@ module XMonadConfig.LayoutHook
   ) where
 
 import XMonad (Window)
-import XMonad.Layout ((|||), Choose)
+import XMonad.Layout ((|||), Choose, Full(..))
 import XMonad.Layout.Decoration (Decoration, DefaultShrinker)
 import XMonad.Layout.Gaps (Gaps, gaps)
 import XMonad.Layout.Grid (Grid(..))
@@ -26,14 +26,14 @@ infixr 2 :|||
 type (:|||) = Choose
 
 
-type MyLayoutHook  = TaskbarMargin :$ TwoTabbedPane :||| Grid
+type MyLayoutHook  = (TaskbarMargin :$ TwoTabbedPane :||| Grid) :||| Full
 type TaskbarMargin = Gaps
 type TwoTabbedPane = SubTabbed TwoPane
 type SubTabbed x   = (Decoration TabbedDecoration DefaultShrinker :. Sublayout Simplest) x
 
 
 myLayoutHook :: MyLayoutHook Window
-myLayoutHook = taskbarMargin $ twoTabbedPane ||| Grid
+myLayoutHook = (taskbarMargin $ twoTabbedPane ||| Grid) ||| Full
   where
     taskbarMargin = gaps [(D, 40)]
     twoTabbedPane = subTabbed $ TwoPane (1/55) (1/2)
