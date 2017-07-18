@@ -18,6 +18,7 @@ executable xmonad-config
   default-language:    Haskell2010
   ghc-options:         -Wall -Wno-name-shadowing -Wno-unused-do-bind -Wno-type-defaults
   other-modules:       XMonadConfig.CommandWrapper
+                     , XMonadConfig.LayoutHook
                      , XMonadConfig.Types
   build-depends:       base >= 4.7 && < 5
                      , containers

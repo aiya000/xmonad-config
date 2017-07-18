@@ -1,4 +1,3 @@
-import Control.Monad (void)
 import Data.Map.Lazy (Map)
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
@@ -8,15 +7,12 @@ import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Hooks.ManageDocks (ToggleStruts(..))
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout (ChangeLayout(..))
-import XMonad.Layout.Gaps (gaps)
-import XMonad.Layout.Grid (Grid(..))
-import XMonad.Layout.SubLayouts (subTabbed, GroupMsg(..))
-import XMonad.Layout.TwoPane (TwoPane(..))
+import XMonad.Layout.SubLayouts (GroupMsg(..))
 import XMonad.Operations (sendMessage, withFocused, mouseResizeWindow)
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonad.Util.EZConfig (additionalMouseBindings)
-import XMonad.Util.Types (Direction2D(..))
 import XMonadConfig.CommandWrapper
+import XMonadConfig.LayoutHook (myLayoutHook)
 import qualified Data.Map.Lazy as M
 import qualified XMonadConfig.CommandWrapper as CW
 
@@ -54,11 +50,6 @@ unixCasualMask = controlMask .|. shiftMask
 myTerminal :: String
 myTerminal = "termite"
 
---TODO: Type this
-myLayoutHook = taskbarMargin $ twoTabbedPane ||| Grid
-  where
-    taskbarMargin = gaps [(D, 40)]
-    twoTabbedPane = subTabbed $ TwoPane (1/55) (1/2)
 
 myStartupHook :: X ()
 myStartupHook = setWMName "LG3D" -- Fix to start of Java Swing apps
