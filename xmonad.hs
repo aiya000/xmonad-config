@@ -50,6 +50,9 @@ unixCasualMask = controlMask .|. shiftMask
 myTerminal :: String
 myTerminal = "termite"
 
+myWebBrowser :: String
+myWebBrowser = "firefox"
+
 
 myStartupHook :: X ()
 myStartupHook = setWMName "LG3D" -- Fix to start of Java Swing apps
@@ -88,7 +91,7 @@ myNormalKeys _ = M.fromList $
   , ((superMask, xK_F11), CW.lockScreenSuspend)
   , ((superMask, xK_F12), CW.lockScreenHibernate)
   , ((superMask, xK_e), spawn "thunar")
-  , ((superMask, xK_f), spawn "vivaldi-stable")
+  , ((superMask, xK_f), spawn myWebBrowser)
   , ((superMask, xK_h), withFocused $ keysMoveWindow (-5,0))
   , ((superMask, xK_j), withFocused $ keysMoveWindow (0,5))
   , ((superMask, xK_k), withFocused $ keysMoveWindow (0,-5))
@@ -117,7 +120,7 @@ myUnixKeys _ = M.fromList $
   , ((unixCasualMask, xK_a), sinkAll)
   , ((unixCasualMask, xK_c), kill)
   , ((unixCasualMask, xK_e), spawn "thunar")
-  , ((unixCasualMask, xK_f), spawn "vivaldi-stable")
+  , ((unixCasualMask, xK_f), spawn myWebBrowser)
   , ((unixCasualMask, xK_g), sendMessage NextLayout)
   , ((unixCasualMask, xK_h), windows focusUp)
   , ((unixCasualMask, xK_i), nextScreen)
