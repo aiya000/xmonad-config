@@ -153,4 +153,5 @@ myUnixKeys _ = M.fromList $
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =
   [ ((altMask .|. controlMask, button1), mouseResizeWindow)
+  , ((shiftMask .|. controlMask, button1), mouseMoveWindow)
   ]
