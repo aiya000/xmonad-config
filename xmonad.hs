@@ -96,7 +96,7 @@ myNormalKeys _ = M.fromList $
   , ((superMask, xK_j), withFocused $ keysMoveWindow (0,5))
   , ((superMask, xK_k), withFocused $ keysMoveWindow (0,-5))
   , ((superMask, xK_l), withFocused $ keysMoveWindow (5,0))
-  , ((superMask, xK_m), spawn "xfce4-mixer")
+  , ((superMask, xK_m), spawn "pavucontrol")
   , ((superMask, xK_r), spawn "dmenu_run")
   , ((superMask, xK_t), spawn myTerminal)
   -- Another KeyMask
@@ -127,7 +127,7 @@ myUnixKeys _ = M.fromList $
   , ((unixCasualMask, xK_j), withFocused $ sendMessage . MergeAll)
   , ((unixCasualMask, xK_k), withFocused $ sendMessage . UnMerge)
   , ((unixCasualMask, xK_l), windows focusDown)
-  , ((unixCasualMask, xK_m), spawn "xfce4-mixer")
+  , ((unixCasualMask, xK_m), spawn "pavucontrol")
   , ((unixCasualMask, xK_r), spawn "dmenu_run")
   , ((unixCasualMask, xK_t), spawn myTerminal)
   , ((unixCasualMask, xK_x), switchKeyModeTo CW.Common)
