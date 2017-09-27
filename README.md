@@ -26,8 +26,5 @@ and execute `startx`
 This maybe succeed :dog2:
 
 ```console
-$ stack install && stack exec -- xmonad-config --recompile && stack exec -- xmonad-config --restart && killall xmonad-x86_64-linux && xmonad-config > /dev/null 2>&1 &
+$ stack install && ./build && killall xmonad-x86_64-linux && start ./xmonad-x86_64-linux
 ```
-
-# Another informations
-- `./xmonad{,-contrib,-extras}` and `X11` are used by haskell-stack and `xmonad-config --recompile`

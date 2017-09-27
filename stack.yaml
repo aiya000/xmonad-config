@@ -1,14 +1,7 @@
-flags:
-  xmonad-contrib:
-    use_xft: false
+resolver: lts-7.14
 extra-package-dbs: []
 packages:
 - '.'
-- xmonad/
-- xmonad-contrib/
 extra-deps:
-- X11-1.8
-- alsa-core-0.5.0.1
-- alsa-mixer-0.2.0.3
-- xmonad-0.13
-resolver: lts-7.14
+- X11-xft-0.3.1
+- xmonad-contrib-0.12
