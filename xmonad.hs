@@ -1,27 +1,14 @@
-import Data.Map.Lazy (Map)
 import XMonad
-import XMonad.Actions.CycleWS (nextScreen)
-import XMonad.Actions.FloatKeys (keysMoveWindow)
-import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Config.Desktop (desktopConfig)
-import XMonad.Hooks.ManageDocks (ToggleStruts(..))
 import XMonad.Hooks.SetWMName (setWMName)
-import XMonad.Layout (ChangeLayout(..))
-import XMonad.Layout.SubLayouts (GroupMsg(..))
-import XMonad.Operations (sendMessage, withFocused, mouseResizeWindow)
-import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonad.Util.EZConfig (additionalMouseBindings)
-import XMonadConfig.CommandWrapper
+import XMonadConfig.Keys (readMyKeys, altMask)
 import XMonadConfig.LayoutHook (myLayoutHook)
-import qualified Data.Map.Lazy as M
-import qualified XMonadConfig.CommandWrapper as CW
-
+import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 
 main :: IO ()
 main = do
-  inUnixKeymapMode <- currentKeyModeIs CW.UnixKeymap
-  let (myModMask, myKeys) = if inUnixKeymapMode then (unixCasualMask, myUnixKeys)
-                                                else (superMask, myNormalKeys)
+  (myModMask, myKeys) <- readMyKeys
   xmonad $ desktopConfig
     { terminal           = myTerminal
     , modMask            = myModMask
@@ -37,23 +24,6 @@ main = do
     `additionalMouseBindings` myMouseBindings
 
 
-altMask :: KeyMask
-altMask = mod1Mask
-
-superMask :: KeyMask
-superMask = mod4Mask
-
-unixCasualMask :: KeyMask
-unixCasualMask = controlMask .|. shiftMask
-
-
-myTerminal :: String
-myTerminal = "termite"
-
-myWebBrowser :: String
-myWebBrowser = "firefox"
-
-
 myStartupHook :: X ()
 myStartupHook = setWMName "LG3D" -- Fix to start of Java Swing apps
 
@@ -62,93 +32,6 @@ myManageHook = composeAll
   [ className =? "Xfce4-panel" --> doIgnore
   , className =? "Xfdesktop"   --> doIgnore
   ]
-
-myWorkspaces :: [String]
-myWorkspaces = map show [1..4]
-
-
-myNormalKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
-myNormalKeys _ = M.fromList $
-  [ ((altMask .|. controlMask, xK_a), sinkAll)
-  , ((altMask .|. controlMask, xK_b), sendMessage ToggleStruts)
-  , ((altMask .|. controlMask, xK_c), kill)
-  , ((altMask .|. controlMask, xK_h), windows swapUp)
-  , ((altMask .|. controlMask, xK_i), nextScreen)
-  , ((altMask .|. controlMask, xK_l), windows swapDown)
-  , ((altMask .|. controlMask, xK_n), sendMessage NextLayout)
-  , ((altMask .|. controlMask, xK_q), restartXMonadConfig)
-  , ((altMask, xK_h), windows focusUp)
-  , ((altMask, xK_j), withFocused $ sendMessage . MergeAll)
-  , ((altMask, xK_k), withFocused $ sendMessage . UnMerge)
-  , ((altMask, xK_l), windows focusDown)
-  , ((superMask, xK_F1), spawn "light -U 10")
-  , ((superMask, xK_F2), spawn "light -A 10")
-  , ((superMask, xK_F3), toggleTouchPad)
-  , ((superMask, xK_F4), spawn "amixer -c 1 set Master toggle && amixer -c 1 set Speaker unmute")
-  , ((superMask, xK_F5), spawn "amixer -c 1 set Master 3-")
-  , ((superMask, xK_F6), spawn "amixer -c 1 set Master 3+")
-  , ((superMask, xK_F10), CW.lockScreen)
-  , ((superMask, xK_F11), CW.lockScreenSuspend)
-  , ((superMask, xK_F12), CW.lockScreenHibernate)
-  , ((superMask, xK_e), spawn "thunar")
-  , ((superMask, xK_f), spawn myWebBrowser)
-  , ((superMask, xK_h), withFocused $ keysMoveWindow (-5,0))
-  , ((superMask, xK_j), withFocused $ keysMoveWindow (0,5))
-  , ((superMask, xK_k), withFocused $ keysMoveWindow (0,-5))
-  , ((superMask, xK_l), withFocused $ keysMoveWindow (5,0))
-  , ((superMask, xK_m), spawn "pavucontrol")
-  , ((superMask, xK_r), spawn "dmenu_run")
-  , ((superMask, xK_t), spawn myTerminal)
-  -- Another KeyMask
-  , ((noModMask, xK_F1), resetXKeyboardLayout USKeyboardLayout)
-  , ((shiftMask, xK_F1), resetXKeyboardLayout ResetSetXKBMAP)
-  , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
-  , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
-  , ((unixCasualMask, xK_x), switchKeyModeTo CW.UnixKeymap)
-  ]
-  -- Switch workspace
-  ++ [ ((altMask .|. controlMask, numKey), windows $ greedyView workspace)
-     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
-  -- Move current window to target worskpace
-  ++ [((superMask, numKey), windows $ shift workspace)
-     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
-
-myUnixKeys :: XConfig Layout -> Map (KeyMask, KeySym) (X ())
-myUnixKeys _ = M.fromList $
-  [ ((unixCasualMask .|. altMask, xK_h), windows swapUp)
-  , ((unixCasualMask .|. altMask, xK_l), windows swapDown)
-  , ((unixCasualMask, xK_a), sinkAll)
-  , ((unixCasualMask, xK_c), kill)
-  , ((unixCasualMask, xK_e), spawn "thunar")
-  , ((unixCasualMask, xK_f), spawn myWebBrowser)
-  , ((unixCasualMask, xK_g), sendMessage NextLayout)
-  , ((unixCasualMask, xK_h), windows focusUp)
-  , ((unixCasualMask, xK_i), nextScreen)
-  , ((unixCasualMask, xK_j), withFocused $ sendMessage . MergeAll)
-  , ((unixCasualMask, xK_k), withFocused $ sendMessage . UnMerge)
-  , ((unixCasualMask, xK_l), windows focusDown)
-  , ((unixCasualMask, xK_m), spawn "pavucontrol")
-  , ((unixCasualMask, xK_r), spawn "dmenu_run")
-  , ((unixCasualMask, xK_t), spawn myTerminal)
-  , ((unixCasualMask, xK_x), switchKeyModeTo CW.Common)
-  , ((superMask, xK_F1), spawn "light -U 10")
-  , ((superMask, xK_F2), spawn "light -A 10")
-  , ((superMask, xK_F3), spawn "amixer -c 1 set Master 3-")
-  , ((superMask, xK_F4), spawn "amixer -c 1 set Master 3+")
-  , ((superMask, xK_F10), CW.lockScreen)
-  , ((superMask, xK_F11), CW.lockScreenSuspend)
-  , ((superMask, xK_F12), CW.lockScreenHibernate)
-  -- Another KeyMask
-  , ((noModMask, xK_Print), takeScreenShot CW.FullScreen)
-  , ((shiftMask, xK_Print), takeScreenShot CW.ActiveWindow)
-  ]
-  -- Switch workspace
-  ++ [ ((unixCasualMask, numKey), windows $ greedyView workspace)
-     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
-  -- Move current window to target worskpace
-  ++ [((altMask, numKey), windows $ shift workspace)
-     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces ]
-
 
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =

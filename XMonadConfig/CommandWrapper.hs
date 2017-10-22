@@ -12,22 +12,22 @@ module XMonadConfig.CommandWrapper
   , toggleTouchPad
   , resetXKeyboardLayout
   , XKeyboardLayout (..)
-  , XMonadConfigKeyMode (..)
-  , switchKeyModeTo
-  , currentKeyModeIs
   , restartXMonadConfig
+  , continueIfSucceed
+  , continueIfFailed
+  , runShellyOnX
   ) where
 
 import Control.Concurrent (threadDelay)
 import Control.Monad (when, void)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Data.String (IsString, fromString)
+import Data.String (fromString)
 import Data.Typeable (cast)
 import Shelly (Sh, shelly, run_, lastExitCode, exit, (</>))
-import System.EasyFile (doesFileExist)
 import System.Environment (getEnv, lookupEnv)
 import Text.Printf (printf)
 import XMonad.Core (X, spawn)
+import XMonadConfig.Types (FilePath')
 import qualified Shelly as SH
 
 -- | See `takeScreenShot`
@@ -35,12 +35,6 @@ data ScreenShotType = FullScreen | ActiveWindow
 
 -- | See `setKeymapToUS`
 data XKeyboardLayout = USKeyboardLayout | ResetSetXKBMAP
-
--- | Polymorphic string
-type FilePath' = forall s. IsString s => s
-
--- | See `switchKeyModeTo`
-data XMonadConfigKeyMode = Common | UnixKeymap
 
 
 -- |
@@ -162,41 +156,6 @@ infixl 3 `continueIfFailed`
 -- | Execute `Sh a` in X monad context
 runShellyOnX :: Sh a -> X ()
 runShellyOnX = liftIO . shelly . void
-
-
--- |
--- If this is exists, XMonadConfig.myUnixKeys will be loaded.
--- Otherwise, XMonadConfig.myNormalKeys will be loaded
-unixKeymapModeFlagFile :: FilePath'
-unixKeymapModeFlagFile = "/tmp/xmonad-keymode-UnixKeymap"
-
--- |
--- Restart xmonad-config
--- and load XMonadConfig.myNormalKeys or myUnixKeys
---
--- Warning: This is not working fine at now
-switchKeyModeTo :: XMonadConfigKeyMode -> X ()
-switchKeyModeTo UnixKeymap = runShellyOnX $ body `continueIfFailed` notifyFailure
-  where
-    body = run_ "touch" [unixKeymapModeFlagFile]
-      `continueIfSucceed` run_ "xmonad-config" ["--restart"]
-      `continueIfSucceed` run_ "notify-send" ["XMonad", "restarted"]
-    notifyFailure = run_ "notify-send" ["XMonad", "xmonad-config restarting is failed"]
-
-switchKeyModeTo Common = runShellyOnX $ body `continueIfFailed` notifyFailure
-  where
-    body = run_ "rm" ["-f", unixKeymapModeFlagFile]
-      `continueIfSucceed` run_ "xmonad-config" ["--restart"]
-      `continueIfSucceed` run_ "notify-send" ["XMonad", "restarted"]
-    notifyFailure = run_ "notify-send" ["XMonad", "xmonad-config restarting is failed"]
-
-
--- |
--- Return True if current XMonadConfigKeyMode is specified argument.
--- Otherwise, return False
-currentKeyModeIs :: XMonadConfigKeyMode -> IO Bool
-currentKeyModeIs UnixKeymap = doesFileExist unixKeymapModeFlagFile
-currentKeyModeIs Common     = not <$> doesFileExist unixKeymapModeFlagFile
 
 
 -- |
