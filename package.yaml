@@ -1,0 +1,32 @@
+name: xmonad-config
+version: '0.1.0.0'
+synopsis: My XMonad Env
+description: Please see README.md
+category: Simple
+author: aiya000
+maintainer: aiya000.develop@gmail.com
+copyright: aiya000
+license: MIT
+homepage: https://github.com/aiya000/xmonad-config#README.md
+
+ghc-options:
+  - -Wall
+  - -Wno-name-shadowing
+  - -Wno-unused-do-bind
+  - -Wno-type-defaults
+
+dependencies:
+  - X11
+  - base >=4.7 && <5
+  - containers
+  - easy-file
+  - extra
+  - shelly
+  - text
+  - xmonad
+  - xmonad-contrib
+
+executables:
+  xmonad-config:
+    main: xmonad.hs
+    source-dirs: ./.
