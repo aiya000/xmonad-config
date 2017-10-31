@@ -1,5 +1,7 @@
+import Data.Monoid (All)
 import XMonad
 import XMonad.Config.Desktop (desktopConfig)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Util.EZConfig (additionalMouseBindings)
 import XMonadConfig.Keys (readMyKeys, altMask)
@@ -9,7 +11,7 @@ import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 main :: IO ()
 main = do
   (myModMask, myKeys) <- readMyKeys
-  xmonad $ desktopConfig
+  xmonad . ewmh $ desktopConfig
     { terminal           = myTerminal
     , modMask            = myModMask
     , keys               = myKeys
@@ -20,6 +22,7 @@ main = do
     , workspaces         = myWorkspaces
     , focusFollowsMouse  = False
     , focusedBorderColor = "#0000ff"
+    , handleEventHook    = myHandleEventHook
     }
     `additionalMouseBindings` myMouseBindings
 
@@ -38,3 +41,6 @@ myMouseBindings =
   [ ((altMask .|. controlMask, button1), mouseResizeWindow)
   , ((shiftMask .|. controlMask, button1), mouseMoveWindow)
   ]
+
+myHandleEventHook :: Event -> X All
+myHandleEventHook = handleEventHook def <+> fullscreenEventHook
