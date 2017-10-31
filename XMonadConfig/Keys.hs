@@ -123,6 +123,7 @@ myNormalKeys _ = M.fromList $
   , ((superMask, xK_l), withFocused $ keysMoveWindow (5,0))
   , ((superMask, xK_m), spawn "pavucontrol")
   , ((superMask, xK_r), spawn "dmenu_run")
+  , ((superMask, xK_s), spawn "franz-bin")
   , ((superMask, xK_t), spawn myTerminal)
   -- Another KeyMask
   , ((noModMask, xK_F1), resetXKeyboardLayout USKeyboardLayout)
