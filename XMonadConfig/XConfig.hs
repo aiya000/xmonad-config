@@ -10,7 +10,7 @@ myTerminal :: String
 myTerminal = "termite"
 
 myWebBrowser :: String
-myWebBrowser = "firefox"
+myWebBrowser = "vivaldi-stable"
 
 myWorkspaces :: [String]
 myWorkspaces = map show [1..4]
