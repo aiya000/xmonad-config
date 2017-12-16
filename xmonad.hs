@@ -34,6 +34,7 @@ myManageHook :: ManageHook
 myManageHook = composeAll
   [ className =? "Xfce4-panel" --> doIgnore
   , className =? "Xfdesktop"   --> doIgnore
+  , className =? "io.github.aiya000.DoromochiApp" --> doFloat
   ]
 
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
