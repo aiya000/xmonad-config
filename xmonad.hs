@@ -4,16 +4,15 @@ import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Util.EZConfig (additionalMouseBindings)
-import XMonadConfig.Keys (readMyKeys, altMask)
+import XMonadConfig.Keys (myKeys, superMask, altMask)
 import XMonadConfig.LayoutHook (myLayoutHook)
 import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 
 main :: IO ()
 main = do
-  (myModMask, myKeys) <- readMyKeys
   xmonad . ewmh $ desktopConfig
     { terminal           = myTerminal
-    , modMask            = myModMask
+    , modMask            = superMask
     , keys               = myKeys
     , borderWidth        = 2
     , layoutHook         = myLayoutHook
