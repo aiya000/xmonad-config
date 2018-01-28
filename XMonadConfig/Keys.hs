@@ -72,8 +72,8 @@ myKeys _ = M.fromList $
   -- Another KeyMask
   , ((noModMask, xK_F1), resetXKeyboardLayout USKeyboardLayout)
   , ((shiftMask, xK_F1), resetXKeyboardLayout ResetSetXKBMAP)
-  , ((noModMask, xK_Print), takeScreenShot FullScreen)
-  , ((shiftMask, xK_Print), takeScreenShot ActiveWindow)
+  , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
+  , ((shiftMask, xK_Print), takeScreenShot FullScreen)
   ]
   -- Switch workspace
   ++ [ ((altMask .|. controlMask, numKey), windows $ greedyView workspace)
