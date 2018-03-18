@@ -9,9 +9,9 @@ module XMonadConfig.CommandWrapper
   , lockScreen
   , lockScreenSuspend
   , lockScreenHibernate
-  , toggleTouchPad
   , resetXKeyboardLayout
   , XKeyboardLayout (..)
+  , withHomeDir
   , restartXMonadConfig
   , continueIfSucceed
   , continueIfFailed
@@ -98,16 +98,6 @@ lockScreenHibernate = do
   spawn "sleep 2"
   --spawn "xfce4-session-logout --hibernate" -- NOTE: Doesn't work
   spawn "sudo pm-hibernate"
-
-
--- |
--- Disable touch pad if touch pad is enabled.
--- Enable touch pad if touch pad is disabled
---
--- Notice: This is not working fine if you link this repository to other than ~/.xmonad
-toggleTouchPad :: X ()
-toggleTouchPad = withHomeDir $ \homeDir -> do
-  spawn $ homeDir ++ "/.xmonad/bin/trackpad-toggle.sh"
 
 
 -- |

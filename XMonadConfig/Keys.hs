@@ -13,6 +13,7 @@ module XMonadConfig.Keys
   ) where
 
 import Data.Map.Lazy (Map)
+import Data.Semigroup ((<>))
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
@@ -52,13 +53,13 @@ myKeys _ = M.fromList $
   , ((altMask, xK_l), windows focusDown)
   , ((superMask, xK_F1), spawn "light -U 5")
   , ((superMask, xK_F2), spawn "light -A 5")
-  , ((superMask, xK_F3), toggleTouchPad)
   , ((superMask, xK_F4), spawn "amixer -c 1 set Master toggle && amixer -c 1 set Speaker unmute")
   , ((superMask, xK_F5), spawn "amixer -c 1 set Master 3-")
   , ((superMask, xK_F6), spawn "amixer -c 1 set Master 3+")
   , ((superMask, xK_F10), lockScreen)
   , ((superMask, xK_F11), lockScreenSuspend)
   , ((superMask, xK_F12), lockScreenHibernate)
+  , ((superMask, xK_c), withHomeDir $ spawn . (<> "/.xmonad/bin/trackpad-toggle.sh"))
   , ((superMask, xK_e), spawn "thunar")
   , ((superMask, xK_f), spawn myWebBrowser)
   , ((superMask, xK_h), withFocused $ keysMoveWindow (-5,0))
@@ -70,8 +71,9 @@ myKeys _ = M.fromList $
   , ((superMask, xK_s), spawn "franz-bin")
   , ((superMask, xK_t), spawn myTerminal)
   -- Another KeyMask
-  , ((noModMask, xK_F1), resetXKeyboardLayout USKeyboardLayout)
+  , ((noModMask, xK_F1), resetXKeyboardLayout USKeyboardLayout) -- I never used F1 key in anywhere
   , ((shiftMask, xK_F1), resetXKeyboardLayout ResetSetXKBMAP)
+  , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
   , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
   , ((shiftMask, xK_Print), takeScreenShot FullScreen)
   ]
