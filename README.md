@@ -22,9 +22,17 @@ exec stack exec xmonad-config
 and execute `startx`
 
 
-# How to restart ?
+# How to restart ? <a name="xmonad-restart"></a>
 This maybe succeed :dog2:
 
 ```console
 $ stack install && ./build && killall xmonad-x86_64-linux && start ./xmonad-x86_64-linux
+```
+
+
+# I [restarted xmonad](#xmonad-restart), but anything wasn't changed
+Please try :point_down: and [restart xmonad](#xmonad-restart) again
+
+```shell-session
+$ find .stack-work/install -type f -name xmonad-config | head -1
 ```
