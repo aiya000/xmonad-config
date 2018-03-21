@@ -26,7 +26,7 @@ and execute `startx`
 This maybe succeed :dog2:
 
 ```console
-$ stack install && ./build && killall xmonad-x86_64-linux && start ./xmonad-x86_64-linux
+$ stack install && stack exec xmonad-config --recompile && stack exec xmonad-config --restart && killall xmonad-x86_64-linux && xmonad-config > /dev/null 2>&1 &
 ```
 
 
