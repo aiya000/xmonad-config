@@ -4,12 +4,13 @@ import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Util.EZConfig (additionalMouseBindings)
+import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonadConfig.Keys (myKeys, superMask, altMask)
 import XMonadConfig.LayoutHook (myLayoutHook)
 import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 
 main :: IO ()
-main = do
+main =
   xmonad . ewmh $ desktopConfig
     { terminal           = myTerminal
     , modMask            = superMask
@@ -27,7 +28,9 @@ main = do
 
 
 myStartupHook :: X ()
-myStartupHook = setWMName "LG3D" -- Fix to start of Java Swing apps
+myStartupHook = do
+  setWMName "LG3D" -- Fix to start of Java Swing apps
+  spawnOnce myTerminal
 
 myManageHook :: ManageHook
 myManageHook = composeAll
