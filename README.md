@@ -13,17 +13,17 @@ $ stack install
 
 
 # How to use
-Add the following this line into your .xinitrc
+Add the following this line into your .xinitrc after `stack install`
 
 ```shell
-exec stack exec xmonad-config
+exec ~/.local/bin/xmonad-config
 ```
 
 and execute `startx`
 
 
 # How to restart ? <a name="xmonad-restart"></a>
-This maybe succeed :dog2:
+like below :dog2:
 
 ```console
 $ stack install && stack exec xmonad-config --recompile && stack exec xmonad-config --restart && killall xmonad-x86_64-linux && xmonad-config > /dev/null 2>&1 &
@@ -34,5 +34,5 @@ $ stack install && stack exec xmonad-config --recompile && stack exec xmonad-con
 Please try :point_down: and [restart xmonad](#xmonad-restart) again
 
 ```shell-session
-$ find .stack-work/install -type f -name xmonad-config | head -1
+$ rm $(find .stack-work/install -type f -name xmonad-config | head -1)
 ```
