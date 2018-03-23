@@ -1,17 +1,25 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE QuasiQuotes #-}
+
+import Control.Monad ((>=>))
 import Data.Monoid (All)
+import Data.Semigroup ((<>))
+import Data.String.Here (i)
 import XMonad
 import XMonad.Config.Desktop (desktopConfig)
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.DynamicLog (statusBar, dzenPP)
+import XMonad.Hooks.EwmhDesktops (fullscreenEventHook)
+import XMonad.Hooks.ManageDocks (AvoidStruts)
 import XMonad.Hooks.SetWMName (setWMName)
+import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Util.EZConfig (additionalMouseBindings)
-import XMonad.Util.SpawnOnce (spawnOnce)
 import XMonadConfig.Keys (myKeys, superMask, altMask)
 import XMonadConfig.LayoutHook (myLayoutHook)
 import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 
 main :: IO ()
 main =
-  xmonad . ewmh $ desktopConfig
+  dzen >=> xmonad $ desktopConfig
     { terminal           = myTerminal
     , modMask            = superMask
     , keys               = myKeys
@@ -25,6 +33,17 @@ main =
     , handleEventHook    = myHandleEventHook
     }
     `additionalMouseBindings` myMouseBindings
+  where
+    -- Similar to 'XMonad.Hooks.DynamicLog',
+    -- but avoid https://github.com/xmonad/xmonad/issues/79 by -dock,
+    -- with my preference
+    dzen :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
+    dzen = statusBar ("dzen2 " <> dzenOptions) dzenPP (const (altMask .|. controlMask, xK_g))
+
+    dzenOptions :: String
+    dzenOptions =
+      let surfacePro3ScreenWidth = 2160
+      in [i|-dock -w ${show surfacePro3ScreenWidth}|]
 
 
 myStartupHook :: X ()
