@@ -28,9 +28,8 @@ main =
 
 
 myStartupHook :: X ()
-myStartupHook = do
+myStartupHook =
   setWMName "LG3D" -- Fix to start of Java Swing apps
-  spawnOnce myTerminal
 
 myManageHook :: ManageHook
 myManageHook = composeAll
