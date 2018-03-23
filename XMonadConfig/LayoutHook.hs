@@ -5,6 +5,7 @@ module XMonadConfig.LayoutHook
   ) where
 
 import XMonad (Window)
+import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts)
 import XMonad.Layout ((|||), Choose, Full(..))
 import XMonad.Layout.Decoration (Decoration, DefaultShrinker)
 import XMonad.Layout.Grid (Grid(..))
@@ -24,12 +25,12 @@ infixr 2 :|||
 type (:|||) = Choose
 
 
-type MyLayoutHook  = TwoTabbedPane :||| Grid :||| Full
+type MyLayoutHook  = AvoidStruts :$ TwoTabbedPane :||| Grid :||| Full
 type TwoTabbedPane = SubTabbed TwoPane
 type SubTabbed x   = (Decoration TabbedDecoration DefaultShrinker :. Sublayout Simplest) x
 
 
 myLayoutHook :: MyLayoutHook Window
-myLayoutHook = twoTabbedPane ||| Grid ||| Full
+myLayoutHook = avoidStruts $ twoTabbedPane ||| Grid ||| Full
   where
     twoTabbedPane = subTabbed $ TwoPane (1/55) (1/2)
