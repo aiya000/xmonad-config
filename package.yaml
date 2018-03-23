@@ -21,6 +21,7 @@ dependencies:
   - containers
   - easy-file
   - extra
+  - here
   - shelly
   - text
   - xmonad
