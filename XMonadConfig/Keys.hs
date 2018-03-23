@@ -40,8 +40,8 @@ superMask = mod4Mask
 myKeys :: Keys
 myKeys _ = M.fromList $
   [ ((altMask .|. controlMask, xK_a), sinkAll)
-  , ((altMask .|. controlMask, xK_b), sendMessage ToggleStruts)
   , ((altMask .|. controlMask, xK_c), kill)
+  , ((altMask .|. controlMask, xK_g), sendMessage ToggleStruts)
   , ((altMask .|. controlMask, xK_h), windows swapUp)
   , ((altMask .|. controlMask, xK_i), nextScreen)
   , ((altMask .|. controlMask, xK_l), windows swapDown)
