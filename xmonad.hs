@@ -1,10 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE QuasiQuotes #-}
 
 import Control.Monad ((>=>))
 import Data.Monoid (All)
-import Data.Semigroup ((<>))
-import Data.String.Here (i)
 import XMonad
 import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Hooks.DynamicLog (statusBar, dzenPP)
@@ -13,7 +10,7 @@ import XMonad.Hooks.ManageDocks (AvoidStruts)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Util.EZConfig (additionalMouseBindings)
-import XMonadConfig.Keys (myKeys, superMask, altMask)
+import XMonadConfig.Keys (myToggleStrutsKey, myKeys, superMask, altMask)
 import XMonadConfig.LayoutHook (myLayoutHook)
 import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 
@@ -34,21 +31,14 @@ main =
     }
     `additionalMouseBindings` myMouseBindings
   where
-    -- Similar to 'XMonad.Hooks.DynamicLog',
-    -- but avoid https://github.com/xmonad/xmonad/issues/79 by -dock,
-    -- with my preference
+    -- Run dummy dzen2 for 'myToggleStrutsKey', please see ~/.zshrc_env for real dzen2 startup
     dzen :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
-    dzen = statusBar ("dzen2 " <> dzenOptions) dzenPP (const (altMask .|. controlMask, xK_g))
-
-    dzenOptions :: String
-    dzenOptions =
-      let surfacePro3ScreenWidth = 2160
-      in [i|-dock -w ${show surfacePro3ScreenWidth}|]
+    dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP myToggleStrutsKey
 
 
 myStartupHook :: X ()
 myStartupHook =
-  setWMName "LG3D" -- Fix to start of Java Swing apps
+  setWMName "LG3D" -- Fix startings of Java Swing apps
 
 myManageHook :: ManageHook
 myManageHook = composeAll

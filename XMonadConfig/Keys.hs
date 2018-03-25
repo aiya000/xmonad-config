@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 -- |
@@ -10,6 +11,7 @@ module XMonadConfig.Keys
   , myKeys
   , altMask
   , superMask
+  , myToggleStrutsKey
   ) where
 
 import Data.Map.Lazy (Map)
@@ -18,7 +20,6 @@ import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
 import XMonad.Actions.SinkAll (sinkAll)
-import XMonad.Hooks.ManageDocks (ToggleStruts(..))
 import XMonad.Layout (ChangeLayout(..))
 import XMonad.Layout.SubLayouts (GroupMsg(..))
 import XMonad.Operations (sendMessage, withFocused)
@@ -37,11 +38,13 @@ superMask :: KeyMask
 superMask = mod4Mask
 
 
+myToggleStrutsKey :: LayoutClass l Window => XConfig l -> (KeyMask, KeySym)
+myToggleStrutsKey _ = (altMask .|. controlMask, xK_g)
+
 myKeys :: Keys
 myKeys _ = M.fromList $
   [ ((altMask .|. controlMask, xK_a), sinkAll)
   , ((altMask .|. controlMask, xK_c), kill)
-  , ((altMask .|. controlMask, xK_g), sendMessage ToggleStruts)
   , ((altMask .|. controlMask, xK_h), windows swapUp)
   , ((altMask .|. controlMask, xK_i), nextScreen)
   , ((altMask .|. controlMask, xK_l), windows swapDown)
