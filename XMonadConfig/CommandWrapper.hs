@@ -6,9 +6,6 @@
 module XMonadConfig.CommandWrapper
   ( takeScreenShot
   , ScreenShotType (..)
-  , lockScreen
-  , lockScreenSuspend
-  , lockScreenHibernate
   , resetXKeyboardLayout
   , XKeyboardLayout (..)
   , withHomeDir
@@ -69,35 +66,6 @@ takeScreenShot ssType = do
     messageOf FullScreen   = "shot the full screen"
     messageOf ActiveWindow = "shot the active window"
 
-
--- |
--- Execute xflock4
---
--- Dependency: xflock4
-lockScreen :: X ()
-lockScreen = spawn "xflock4"
-
--- |
--- Execute xflock4 and xfce4-session-logout --suspend
---
--- Dependency: xflock4, xfce4-session-logout
-lockScreenSuspend :: X ()
-lockScreenSuspend = do
-  lockScreen
-  spawn "xfce4-session-logout --suspend"
-
--- |
--- Execute xflock4 and sudo pm-hibernate
---
--- Notice: pm-hibernate must be added to sudoers with you and NOPASSWD
---
--- Dependency: xflock4, sudo, pm-hibernate
-lockScreenHibernate :: X ()
-lockScreenHibernate = do
-  lockScreen
-  spawn "sleep 2"
-  --spawn "xfce4-session-logout --hibernate" -- NOTE: Doesn't work
-  spawn "sudo pm-hibernate"
 
 
 -- |
