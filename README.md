@@ -23,12 +23,11 @@ and execute `startx`
 
 
 # How to restart ? <a name="xmonad-restart"></a>
-like below :dog2:
+Please use replace.sh
 
 ```console
-$ stack install && stack exec xmonad-config --recompile && stack exec xmonad-config --restart && killall xmonad-x86_64-linux && xmonad-config > /dev/null 2>&1 &
+$ ./replace.sh
 ```
-
 
 # I [restarted xmonad](#xmonad-restart), but anything wasn't changed
 Please try :point_down: and [restart xmonad](#xmonad-restart) again
