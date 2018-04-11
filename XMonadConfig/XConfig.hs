@@ -7,7 +7,7 @@ module XMonadConfig.XConfig
 
 
 myTerminal :: String
-myTerminal = "termite"
+myTerminal = "urxvt"
 
 myWebBrowser :: String
 myWebBrowser = "vivaldi-stable"
