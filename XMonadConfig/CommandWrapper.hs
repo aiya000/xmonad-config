@@ -1,12 +1,14 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE Rank2Types #-}
+{-# LANGUAGE ViewPatterns #-}
 
 -- | The cli command wrappers of X
 module XMonadConfig.CommandWrapper
   ( takeScreenShot
   , ScreenShotType (..)
-  , resetXKeyboardLayout
+  , setKeyLayout
   , XKeyboardLayout (..)
   , withHomeDir
   , restartXMonadConfig
@@ -19,6 +21,7 @@ import Control.Concurrent (threadDelay)
 import Control.Monad (when, void)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.String (fromString)
+import Data.String.Here (i)
 import Data.Typeable (cast)
 import Shelly (Sh, shelly, run_, lastExitCode, exit, (</>))
 import System.Environment (getEnv, lookupEnv)
@@ -31,8 +34,14 @@ import qualified Shelly as SH
 data ScreenShotType = FullScreen | ActiveWindow
 
 -- | See `setKeymapToUS`
-data XKeyboardLayout = USKeyboardLayout | ResetSetXKBMAP
+data XKeyboardLayout = USKeyboardLayout
+                     | JPKeyboardLayout
+                     | ResetSetXKBMAP
 
+asXkbmapStuff :: XKeyboardLayout -> String
+asXkbmapStuff USKeyboardLayout = "us"
+asXkbmapStuff JPKeyboardLayout = "jp"
+asXkbmapStuff ResetSetXKBMAP   = "us" -- us by default
 
 -- |
 -- Shortcut for @$HOME@ .
@@ -78,18 +87,18 @@ takeScreenShot ssType = do
 -- The example value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS is '-option caps:ctrl_modifier'
 --
 -- Dependency: setxkbmap, notify-send
-resetXKeyboardLayout :: XKeyboardLayout -> X ()
-resetXKeyboardLayout USKeyboardLayout = do
-  maybeOpt <- liftIO $ lookupEnv "XMONAD_CONFIG_SETXKBMAP_OPTIONS"
-  case maybeOpt of
-    Nothing  -> spawn "notify-send 'Failed' 'XMONAD_CONFIG_SETXKBMAP_OPTIONS is not set'"
-    Just opt -> do
-      spawn $ "setxkbmap -layout us " ++ opt
-      spawn $ "xmodmap ~/.Xmodmap"
-      spawn "notify-send 'Keyboard Layout' 'Current KEYMAP is us'"
-resetXKeyboardLayout ResetSetXKBMAP = do
+setKeyLayout :: XKeyboardLayout -> X ()
+setKeyLayout ResetSetXKBMAP = do
   spawn "notify-send 'Keyboard Layout' 'KEYMAP is reset'"
   spawn "setxkbmap -option"
+setKeyLayout (asXkbmapStuff -> layout) = do
+  maybeOpt <- liftIO $ lookupEnv "XMONAD_CONFIG_SETXKBMAP_OPTIONS"
+  case maybeOpt of
+    Nothing  -> spawn "notify-send 'Failed' 'XMONAD_CONFIG_SETXKBMAP_OPTIONS is never set'"
+    Just opt -> do
+      spawn [i|setxkbmap -layout ${layout} ${opt}|]
+      spawn "xmodmap ~/.Xmodmap"
+      spawn [i|notify-send 'Keyboard Layout' 'The current KEYMAP is ${layout}'|]
 
 
 -- | Instead of '&&' in shelly
@@ -122,7 +131,7 @@ runShellyOnX = liftIO . shelly . void
 --
 -- Dependency: notify-send
 restartXMonadConfig :: X ()
-restartXMonadConfig = runShellyOnX . withHomeDir' $ \homeDir' -> do
+restartXMonadConfig = runShellyOnX . withHomeDir' $ \homeDir' ->
   body (cast' homeDir') `continueIfFailed` notifyFailure
   where
     withHomeDir' :: (FilePath -> Sh ()) -> Sh ()

@@ -74,8 +74,9 @@ myKeys _ = M.fromList $
   , ((superMask, xK_s), spawn "franz-bin")
   , ((superMask, xK_t), spawn myTerminal)
   -- Another KeyMask
-  , ((noModMask, xK_F1), resetXKeyboardLayout USKeyboardLayout) -- I never used F1 key in anywhere
-  , ((shiftMask, xK_F1), resetXKeyboardLayout ResetSetXKBMAP)
+  , ((noModMask, xK_F1), setKeyLayout USKeyboardLayout) -- I never used F1 key in anywhere
+  , ((shiftMask, xK_F1), setKeyLayout ResetSetXKBMAP)
+  , ((noModMask, xK_F2), setKeyLayout JPKeyboardLayout) -- I never used F2 key in anywhere
   , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
   , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
   , ((shiftMask, xK_Print), takeScreenShot FullScreen)
