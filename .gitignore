@@ -5,3 +5,9 @@ xmonad-config.cabal
 xmonad-x86_64-linux
 xmonad.errors
 xmonad.state
+
+# replace.sh or else uses
+xmonad-config.log
+
+# XMonad.Prompt usee
+prompt-history
