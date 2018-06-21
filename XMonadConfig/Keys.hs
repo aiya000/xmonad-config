@@ -1,5 +1,8 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ViewPatterns #-}
 
 -- |
 -- For 'keys'.
@@ -14,8 +17,12 @@ module XMonadConfig.Keys
   , myToggleStrutsKey
   ) where
 
+import Control.Concurrent (threadDelay)
 import Data.Map.Lazy (Map)
 import Data.Semigroup ((<>))
+import Data.String (IsString(..))
+import Data.String.Here (i)
+import System.Environment (getEnv, lookupEnv)
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
@@ -23,10 +30,9 @@ import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Layout (ChangeLayout(..))
 import XMonad.Layout.SubLayouts (GroupMsg(..))
 import XMonad.Operations (sendMessage, withFocused)
+import XMonad.Prompt (XPConfig(..), XPPosition(..), greenXPConfig)
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
-import XMonadConfig.CommandWrapper
-import XMonadConfig.Prompt
 import XMonadConfig.XConfig (myTerminal, myWebBrowser, myWorkspaces)
 import qualified Data.Map.Lazy as M
 
@@ -117,3 +123,76 @@ myKeys _ = M.fromList $
     replaceXMonadWithConfirm =
       confirmPrompt myXPConf "Reload and restart xmonad?" $
         withHomeDir $ spawn . (<> "/.xmonad/replace.sh")
+
+
+-- | Polymorphic string
+type FilePath' = forall s. IsString s => s
+
+-- |
+-- Shortcut for @$HOME@ .
+-- Apply @$HOME@ to @f@
+withHomeDir :: MonadIO m => (FilePath' -> m a) -> m a
+withHomeDir f = do
+  homeDir <- liftIO $ getEnv "HOME"
+  f $ fromString homeDir
+
+-- | See `setKeymapToUS`
+data XKeyboardLayout = USKeyboardLayout
+                     | JPKeyboardLayout
+                     | ResetSetXKBMAP
+
+asXkbmapStuff :: XKeyboardLayout -> String
+asXkbmapStuff USKeyboardLayout = "us"
+asXkbmapStuff JPKeyboardLayout = "jp"
+asXkbmapStuff ResetSetXKBMAP   = "us" -- us by default
+
+
+-- |
+-- 
+-- Change keyboard layout.
+--
+-- Read a value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS,
+-- and apply it.
+--
+-- The example value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS is '-option caps:ctrl_modifier'
+--
+-- Dependency: setxkbmap, notify-send
+setKeyLayout :: XKeyboardLayout -> X ()
+setKeyLayout ResetSetXKBMAP = do
+  spawn "notify-send 'Keyboard Layout' 'KEYMAP is reset'"
+  spawn "setxkbmap -option"
+setKeyLayout (asXkbmapStuff -> layout) = do
+  maybeOpt <- liftIO $ lookupEnv "XMONAD_CONFIG_SETXKBMAP_OPTIONS"
+  case maybeOpt of
+    Nothing  -> spawn "notify-send 'Failed' 'XMONAD_CONFIG_SETXKBMAP_OPTIONS is never set'"
+    Just opt -> do
+      spawn [i|setxkbmap -layout ${layout} ${opt}|]
+      spawn "xmodmap ~/.Xmodmap"
+      spawn [i|notify-send 'Keyboard Layout' 'The current KEYMAP is ${layout}'|]
+
+-- | See `takeScreenShot`
+data ScreenShotType = FullScreen | ActiveWindow
+
+-- |
+-- Take screenshot as ScreenShotType to ~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png,
+-- and notify to finish as screen and voice message
+--
+-- Dependency: imagemagick, espeak, notify-send, xdotool
+takeScreenShot :: ScreenShotType -> X ()
+takeScreenShot ssType = do
+  let msg = messageOf ssType
+  screenshot ssType dateSSPath
+  spawn [i|espeak -s 150 -v +fex '${msg}'|]
+  liftIO $ threadDelay aSec
+  spawn [i|notify-send 'ScreenShot' '${msg}'|]
+  where
+    aSec = 1000000
+    dateSSPath = "~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png"
+
+    screenshot :: ScreenShotType -> FilePath -> X ()
+    screenshot FullScreen   path = spawn [i|import -window root ${path}|]
+    screenshot ActiveWindow path = spawn [i|import -window $(xdotool getwindowfocus -f) ${path}|]
+
+    messageOf :: ScreenShotType -> String
+    messageOf FullScreen   = "shot the full screen"
+    messageOf ActiveWindow = "shot the active window"
