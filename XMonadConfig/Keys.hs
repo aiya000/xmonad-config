@@ -23,8 +23,10 @@ import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Layout (ChangeLayout(..))
 import XMonad.Layout.SubLayouts (GroupMsg(..))
 import XMonad.Operations (sendMessage, withFocused)
+import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonadConfig.CommandWrapper
+import XMonadConfig.Prompt
 import XMonadConfig.XConfig (myTerminal, myWebBrowser, myWorkspaces)
 import qualified Data.Map.Lazy as M
 
@@ -50,9 +52,15 @@ ringMask = superMask
 littleMask :: KeyMask
 littleMask = controlMask
 
-
 myToggleStrutsKey :: LayoutClass l Window => XConfig l -> (KeyMask, KeySym)
 myToggleStrutsKey _ = (thumbMask .|. littleMask, xK_g)
+
+myXPConf :: XPConfig
+myXPConf = greenXPConfig
+            { font = "xft:Ricty:Regular:size=10:antialias=true"
+            , position = Top
+            }
+
 
 myKeys :: Keys
 myKeys _ = M.fromList $
@@ -62,7 +70,7 @@ myKeys _ = M.fromList $
   , ((thumbMask .|. littleMask, xK_i), nextScreen)
   , ((thumbMask .|. littleMask, xK_l), windows swapDown)
   , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
-  , ((thumbMask .|. littleMask, xK_q), restartXMonadConfig)
+  , ((thumbMask .|. littleMask, xK_r), replaceXMonadWithConfirm)
   , ((thumbMask, xK_h), windows focusUp)
   , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
   , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
@@ -92,6 +100,7 @@ myKeys _ = M.fromList $
   , ((noModMask, xK_F2), setKeyLayout JPKeyboardLayout) -- I never used F2 key in anywhere
   , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
   , ((shiftMask, xK_F3), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
+  --, ((shiftMask, xK_F3), nextXModMap)
   , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
   , ((shiftMask, xK_Print), takeScreenShot FullScreen)
   ]
@@ -103,3 +112,8 @@ myKeys _ = M.fromList $
   ++ [((ringMask, numKey), windows $ shift workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
      ]
+  where
+    replaceXMonadWithConfirm :: X ()
+    replaceXMonadWithConfirm =
+      confirmPrompt myXPConf "Reload and restart xmonad?" $
+        withHomeDir $ spawn . (<> "/.xmonad/replace.sh")
