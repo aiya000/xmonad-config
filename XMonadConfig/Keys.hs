@@ -91,14 +91,15 @@ myKeys _ = M.fromList $
   , ((shiftMask, xK_F1), setKeyLayout ResetSetXKBMAP)
   , ((noModMask, xK_F2), setKeyLayout JPKeyboardLayout) -- I never used F2 key in anywhere
   , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
+  , ((shiftMask, xK_F3), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
   , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
   , ((shiftMask, xK_Print), takeScreenShot FullScreen)
   ]
-  -- Switch workspace
+  -- Switch a workspace
   ++ [ ((thumbMask .|. littleMask, numKey), windows $ greedyView workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
      ]
-  -- Move current window to target worskpace
+  -- Move a current window to a worskpace
   ++ [((ringMask, numKey), windows $ shift workspace)
      | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
      ]
