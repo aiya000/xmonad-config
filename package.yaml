@@ -18,10 +18,14 @@ ghc-options:
 dependencies:
   - X11
   - base >=4.7 && <5
+  - bytestring
   - containers
+  - data-default
   - easy-file
   - extra
+  - file-embed
   - here
+  - safe
   - shelly
   - text
   - xmonad
