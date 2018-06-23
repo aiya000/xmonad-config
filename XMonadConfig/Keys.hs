@@ -8,7 +8,7 @@
 {-# LANGUAGE ViewPatterns #-}
 
 -- |
--- For 'XConfig.keys'.
+-- Expose 'myKeys' for 'XConfig.keys'.
 --
 -- This module exports compile time processings
 -- for many keyboard layouts (e.g. HHKB Lite2 US, Surface type cover, HHKB Lite2 JP + HHKB Lite2 US)
@@ -25,7 +25,6 @@ import Data.String (IsString(..))
 import Data.String.Here (i)
 import Safe (readMay)
 import System.Environment (getEnv, lookupEnv)
-import System.IO.Unsafe (unsafePerformIO)
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
@@ -33,7 +32,7 @@ import XMonad.Actions.SinkAll (sinkAll)
 import XMonad.Layout (ChangeLayout(..))
 import XMonad.Layout.SubLayouts (GroupMsg(..))
 import XMonad.Operations (sendMessage, withFocused)
-import XMonad.Prompt (XPConfig(..), XPPosition(..), greenXPConfig, ComplFunction)
+import XMonad.Prompt (XPConfig(..), XPPosition(..), greenXPConfig, ComplFunction, mkComplFunFromList')
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Input (inputPromptWithCompl, (?+))
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
@@ -123,6 +122,7 @@ myKeys _ =
     , ((thumbMask .|. littleMask, xK_l), windows swapDown)
     , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
     , ((thumbMask .|. littleMask, xK_r), replaceXMonadWithConfirm)
+    , ((thumbMask .|. littleMask, xK_k), changeFingerLayout)
     , ((thumbMask, xK_h), windows focusUp)
     , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
     , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
@@ -172,6 +172,19 @@ myKeys _ =
       confirmPrompt myXPConf "Reload and restart xmonad?" $
         withHomeDir $ spawn . (<> "/.xmonad/replace.sh")
 
+    changeFingerLayout :: X ()
+    changeFingerLayout = void $ inputPromptWithCompl myXPConf "Change keymasks" fingerLayoutChoices ?+ \case
+        "HHKB_Lite2_us"      -> writeFingerPref hhkbLite2UsFingers
+        "Surface_type_cover" -> writeFingerPref def
+        x -> spawn [i|notify-send '"${show x}" is an unknown finger layout'|]
+
+    fingerLayoutChoices :: ComplFunction
+    fingerLayoutChoices = mkComplFunFromList' ["HHKB_Lite2_us", "Surface_type_cover"]
+
+    writeFingerPref :: FingersMask -> X ()
+    writeFingerPref pref = do
+      liftIO . writeFile currentFingersPath $ show pref
+      spawn [i|notify-send 'Making a preference was succeed, now you can replace xmonad!'|]
 
 -- | Polymorphic string
 type FilePath' = forall s. IsString s => s

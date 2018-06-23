@@ -11,3 +11,6 @@ xmonad-config.log
 
 # XMonad.Prompt usee
 prompt-history
+
+# myKeys
+currentFingers
