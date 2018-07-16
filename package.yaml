@@ -21,6 +21,7 @@ dependencies:
   - bytestring
   - containers
   - data-default
+  - directory
   - easy-file
   - extra
   - file-embed
