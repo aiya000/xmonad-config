@@ -24,6 +24,7 @@ import Data.Semigroup ((<>))
 import Data.String (IsString(..))
 import Data.String.Here (i)
 import Safe (readMay)
+import System.Directory (listDirectory)
 import System.Environment (getEnv, lookupEnv)
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
@@ -120,9 +121,10 @@ myKeys _ =
     , ((thumbMask .|. littleMask, xK_h), windows swapUp)
     , ((thumbMask .|. littleMask, xK_i), nextScreen)
     , ((thumbMask .|. littleMask, xK_l), windows swapDown)
+    , ((thumbMask .|. littleMask, xK_m), xmodmapMenu)
     , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
-    , ((thumbMask .|. littleMask, xK_r), replaceXMonadWithConfirm)
-    , ((thumbMask .|. littleMask, xK_k), changeFingerLayout)
+    , ((thumbMask .|. littleMask, xK_r), recompileMenu)
+    , ((thumbMask .|. littleMask, xK_k), fingerLayoutMenu)
     , ((thumbMask, xK_h), windows focusUp)
     , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
     , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
@@ -165,21 +167,31 @@ myKeys _ =
        | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
        ]
   where
-    -- Compile this project,
-    -- also replace and restart this xmonad
-    replaceXMonadWithConfirm :: X ()
-    replaceXMonadWithConfirm =
+    -- Load a .xmodmap
+    xmodmapMenu :: X ()
+    xmodmapMenu = void $
+      inputPromptWithCompl myXPConf "Load a .xmonad" xmonadXmodmaps ?+ \xmodmapFile -> do
+        spawn [i|xmodmap ~/.xmonad/Xmodmap/${xmodmapFile}|]
+        spawn [i|notify-send '${xmodmapFile} did seem to be loaded :D'|]
+
+    -- ~/.xmonad/Xmodmap/*
+    xmonadXmodmaps :: ComplFunction
+    xmonadXmodmaps _ = withHomeDir $ (filter (/= "README.md") <$>) . listDirectory . (<> "/.xmonad/Xmodmap")
+
+    -- Compile, replace and restart this xmonad
+    recompileMenu :: X ()
+    recompileMenu =
       confirmPrompt myXPConf "Reload and restart xmonad?" $
         withHomeDir $ spawn . (<> "/.xmonad/replace.sh")
 
-    changeFingerLayout :: X ()
-    changeFingerLayout = void $ inputPromptWithCompl myXPConf "Change keymasks" fingerLayoutChoices ?+ \case
+    fingerLayoutMenu :: X ()
+    fingerLayoutMenu = void $ inputPromptWithCompl myXPConf "Change keymasks" fingerLayouts ?+ \case
         "HHKB_Lite2_us"      -> writeFingerPref hhkbLite2UsFingers
         "Surface_type_cover" -> writeFingerPref def
         x -> spawn [i|notify-send '"${show x}" is an unknown finger layout'|]
 
-    fingerLayoutChoices :: ComplFunction
-    fingerLayoutChoices = mkComplFunFromList' ["HHKB_Lite2_us", "Surface_type_cover"]
+    fingerLayouts :: ComplFunction
+    fingerLayouts = mkComplFunFromList' ["HHKB_Lite2_us", "Surface_type_cover"]
 
     writeFingerPref :: FingersMask -> X ()
     writeFingerPref pref = do
