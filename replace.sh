@@ -1,11 +1,14 @@
 #!/bin/bash
 # shellcheck disable=SC2088
-cd ~/.xmonad || (notify-send '~/.xmonad is not found' ; exit 1)
+xmonad_dir=$(dirname "$0")
+
+cd "$xmonad_dir" || (notify-send "$xmonad_dir is not found" ; exit 1)
+
 {
-    echo '.xmonad/replace.sh starts' &&
+    echo "$xmonad_dir/replace.sh starts" &&
     stack install &&
     stack exec -- xmonad-config --recompile &&
     stack exec -- xmonad-config --restart &&
     killall xmonad-x86_64-linux &&
     stack exec -- xmonad-config > /dev/null 2>&1 &
-} >> ~/.xmonad/xmonad-config.log 2>&1
+} >> "$xmonad_dir/xmonad-config.log" 2>&1
