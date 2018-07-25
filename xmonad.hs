@@ -20,13 +20,13 @@ main =
     { terminal           = myTerminal
     , modMask            = superMask
     , keys               = myKeys
-    , borderWidth        = 2
     , layoutHook         = myLayoutHook
     , startupHook        = myStartupHook
     , manageHook         = myManageHook
     , workspaces         = myWorkspaces
     , focusFollowsMouse  = False
-    , focusedBorderColor = "#0000ff"
+    , focusedBorderColor = "#006400"
+    , borderWidth        = 4
     , handleEventHook    = myHandleEventHook
     }
     `additionalMouseBindings` myMouseBindings
