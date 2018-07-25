@@ -1,9 +1,18 @@
 # About
-These are put/replaced by xmonad
+Please see `XMonadConfig/Keys.hs` for how to this is used
 
-- base-jp: basic config for jp layout
-- base-us: basic config for us layout
-- hhkb-us: for us hhkb layout
+- default-jp: `xmodmap -pke` of a jp keyboard with no modifications
+- default-us: `xmodmap -pke` of a us keyboard with no modifications
+- hhkb-lite2-us: ?
+- hhkb-lite2-twin-jp-us: These are swapped :point\_down:
+    - `Esc` => \`
+    - `Shift-Esc` => `~`
+    - \` => 無
+    - `~` => `Esc`
+    - `Delete` => `\`
+    - `Shift-Delete` => `|`
+    - `\` => `BackSpace`
+    - `|` => `Delete`
 
 # Memo
 ```
