@@ -125,11 +125,16 @@ myKeys _ =
     , ((thumbMask .|. littleMask, xK_k), fingerLayoutMenu)
     , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
     , ((thumbMask .|. littleMask, xK_r), recompileMenu)
+    , ((thumbMask .|. ringMask, xK_s), spawn "amixer -c 1 set Master 10-") -- thumb+ring keys adjusts for MISTEL Barroco MD-600
+    , ((thumbMask .|. ringMask, xK_d), spawn "amixer -c 1 set Master 10+")
+    , ((thumbMask .|. ringMask, xK_f), spawn "amixer -c 1 set Master toggle && amixer -c 1 set Speaker unmute")
+    , ((thumbMask .|. ringMask, xK_c), spawn "light -U 5")
+    , ((thumbMask .|. ringMask, xK_v), spawn "light -A 5")
     , ((thumbMask, xK_h), windows focusUp)
     , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
     , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
     , ((thumbMask, xK_l), windows focusDown)
-    , ((ringMask, xK_F1), spawn "light -U 5")
+    , ((ringMask, xK_F1), spawn "light -U 5") -- ring+Fn keys adjusts for Surface type cover's seal
     , ((ringMask, xK_F2), spawn "light -A 5")
     , ((ringMask, xK_F4), spawn "amixer -c 1 set Master toggle && amixer -c 1 set Speaker unmute")
     , ((ringMask, xK_F5), spawn "amixer -c 1 set Master 10-")
