@@ -25,7 +25,7 @@ import Data.String (IsString(..))
 import Data.String.Here (i)
 import Safe (readMay)
 import System.Directory (listDirectory)
-import System.Environment (getEnv, lookupEnv)
+import System.Environment (getEnv)
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.FloatKeys (keysMoveWindow)
@@ -112,6 +112,7 @@ myXPConf = greenXPConfig
   }
 
 
+-- TODO: the promt for setxkbmap -option $XMONAD_CONFIG_SETXKBMAP_OPTIONS
 myKeys :: Keys
 myKeys _ =
   let (ringMask, littleMask, thumbMask) = fromFingersMask currentFingers
@@ -121,10 +122,9 @@ myKeys _ =
     , ((thumbMask .|. littleMask, xK_h), windows swapUp)
     , ((thumbMask .|. littleMask, xK_i), nextScreen)
     , ((thumbMask .|. littleMask, xK_l), windows swapDown)
-    , ((thumbMask .|. littleMask, xK_m), xmodmapMenu)
+    , ((thumbMask .|. littleMask, xK_k), fingerLayoutMenu)
     , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
     , ((thumbMask .|. littleMask, xK_r), recompileMenu)
-    , ((thumbMask .|. littleMask, xK_k), fingerLayoutMenu)
     , ((thumbMask, xK_h), windows focusUp)
     , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
     , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
@@ -149,12 +149,9 @@ myKeys _ =
     , ((ringMask, xK_s), spawn "franz-bin")
     , ((ringMask, xK_t), spawn myTerminal)
     -- Another KeyMask
-    , ((noModMask, xK_F1), setKeyLayout USKeyboardLayout) -- I never used F1 key in anywhere
-    , ((shiftMask, xK_F1), setKeyLayout ResetSetXKBMAP)
-    , ((noModMask, xK_F2), setKeyLayout JPKeyboardLayout) -- I never used F2 key in anywhere
+    , ((shiftMask, xK_F1), xmodmapMenu) -- `xmodmapMenu` should not be set as `thumbMask .|. littleMask, foo`, because often my left-win key go to somewhere
     , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
     , ((shiftMask, xK_F3), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
-    --, ((shiftMask, xK_F3), nextXModMap)
     , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
     , ((shiftMask, xK_Print), takeScreenShot FullScreen)
     ]
@@ -219,29 +216,6 @@ asXkbmapStuff USKeyboardLayout = "us"
 asXkbmapStuff JPKeyboardLayout = "jp"
 asXkbmapStuff ResetSetXKBMAP   = "us" -- us by default
 
-
--- |
--- 
--- Change keyboard layout.
---
--- Read a value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS,
--- and apply it.
---
--- The example value of $XMONAD_CONFIG_SETXKBMAP_OPTIONS is '-option caps:ctrl_modifier'
---
--- Dependency: setxkbmap, notify-send
-setKeyLayout :: XKeyboardLayout -> X ()
-setKeyLayout ResetSetXKBMAP = do
-  spawn "notify-send 'Keyboard Layout' 'KEYMAP is reset'"
-  spawn "setxkbmap -option"
-setKeyLayout (asXkbmapStuff -> layout) = do
-  maybeOpt <- liftIO $ lookupEnv "XMONAD_CONFIG_SETXKBMAP_OPTIONS"
-  case maybeOpt of
-    Nothing  -> spawn "notify-send 'Failed' 'XMONAD_CONFIG_SETXKBMAP_OPTIONS is never set'"
-    Just opt -> do
-      spawn [i|setxkbmap -layout ${layout} ${opt}|]
-      spawn "xmodmap ~/.Xmodmap"
-      spawn [i|notify-send 'Keyboard Layout' 'The current KEYMAP is ${layout}'|]
 
 -- | See `takeScreenShot`
 data ScreenShotType = FullScreen | ActiveWindow
