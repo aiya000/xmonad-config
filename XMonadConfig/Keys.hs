@@ -151,7 +151,6 @@ myKeys _ =
     , ((ringMask, xK_l), withFocused $ keysMoveWindow (5,0))
     , ((ringMask, xK_m), spawn "pavucontrol")
     , ((ringMask, xK_r), spawn "dmenu_run")
-    , ((ringMask, xK_s), spawn "franz-bin")
     , ((ringMask, xK_t), spawn myTerminal)
     -- Another KeyMask
     , ((shiftMask, xK_F1), xmodmapMenu) -- `xmodmapMenu` should not be set as `thumbMask .|. littleMask, foo`, because often my left-win key go to somewhere
