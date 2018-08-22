@@ -182,14 +182,21 @@ myKeys _ =
     -- Compile, replace and restart this xmonad
     recompileMenu :: X ()
     recompileMenu =
-      confirmPrompt myXPConf "Reload and restart xmonad?" $
-        withHomeDir $ spawn . (<> "/.xmonad/replace.sh")
+      inputPromptWithCompl myXPConf "Reload and restart xmonad?" yesNo ?+ \case
+        "yes" -> do
+          withHomeDir $ spawn . (<> "/.xmonad/replace.sh")
+          spawn [i|notify-send 'Recompiling...'|]
+        "no" -> pure ()
+        x -> spawn [i|notify-send 'Please confirm with "yes" or "no": you took "${x}"'|]
+
+    yesNo :: ComplFunction
+    yesNo = mkComplFunFromList' ["yes", "no"]
 
     fingerLayoutMenu :: X ()
     fingerLayoutMenu = void $ inputPromptWithCompl myXPConf "Change keymasks" fingerLayouts ?+ \case
         "HHKB_Lite2_us"      -> writeFingerPref hhkbLite2UsFingers
         "Surface_type_cover" -> writeFingerPref def
-        x -> spawn [i|notify-send '"${show x}" is an unknown finger layout'|]
+        x -> spawn [i|notify-send '"${x}" is an unknown finger layout'|]
 
     fingerLayouts :: ComplFunction
     fingerLayouts = mkComplFunFromList' ["HHKB_Lite2_us", "Surface_type_cover"]
