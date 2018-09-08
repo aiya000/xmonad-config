@@ -86,9 +86,9 @@ instance Default FingersMask where
 -- | A 'FingersMask' layout for HHKB Lite2 us keyboard
 hhkbLite2UsFingers :: FingersMask
 hhkbLite2UsFingers = FingersMask
-  { ringMask'   = AltMask
+  { ringMask'   = SuperMask
   , littleMask' = ControlMask
-  , thumbMask'  = SuperMask
+  , thumbMask'  = AltMask
   }
 
 -- |
