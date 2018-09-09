@@ -84,8 +84,8 @@ instance Default FingersMask where
     }
 
 -- | A 'FingersMask' layout for HHKB Lite2 us keyboard
-hhkbLite2UsFingers :: FingersMask
-hhkbLite2UsFingers = FingersMask
+hhkbLiteFamilyFingers :: FingersMask
+hhkbLiteFamilyFingers = FingersMask
   { ringMask'   = AltMask
   , littleMask' = ControlMask
   , thumbMask'  = SuperMask
@@ -194,9 +194,9 @@ myKeys _ =
 
     fingerLayoutMenu :: X ()
     fingerLayoutMenu = void $ inputPromptWithCompl myXPConf "Change keymasks" fingerLayouts ?+ \case
-        "HHKB_Lite2_us"      -> writeFingerPref hhkbLite2UsFingers
-        "Surface_type_cover" -> writeFingerPref def
-        x -> spawn [i|notify-send '"${x}" is an unknown finger layout'|]
+      "HHKB Lite2 Family" -> writeFingerPref hhkbLiteFamilyFingers
+      "default (Surface type cover)" -> writeFingerPref def
+      x -> spawn [i|notify-send '"${x}" is an unknown finger layout'|]
 
     fingerLayouts :: ComplFunction
     fingerLayouts = mkComplFunFromList' ["HHKB_Lite2_us", "Surface_type_cover"]
