@@ -171,7 +171,7 @@ myKeys _ =
     -- Load a .xmodmap
     xmodmapMenu :: X ()
     xmodmapMenu = void $
-      inputPromptWithCompl myXPConf "Load a .xmonad" xmonadXmodmaps ?+ \xmodmapFile -> do
+      inputPromptWithCompl myXPConf "Load a .xmodmap" xmonadXmodmaps ?+ \xmodmapFile -> do
         spawn [i|xmodmap ~/.xmonad/Xmodmap/${xmodmapFile}|]
         spawn [i|notify-send '${xmodmapFile} did seem to be loaded :D'|]
 
