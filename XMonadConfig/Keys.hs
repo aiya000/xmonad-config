@@ -194,12 +194,12 @@ myKeys _ =
 
     fingerLayoutMenu :: X ()
     fingerLayoutMenu = void $ inputPromptWithCompl myXPConf "Change keymasks" fingerLayouts ?+ \case
-      "HHKB Lite2 Family" -> writeFingerPref hhkbLiteFamilyFingers
-      "default (Surface type cover)" -> writeFingerPref def
+      "HHKB_Lite2_Family" -> writeFingerPref hhkbLiteFamilyFingers
+      "default_(Surface_type_cover)" -> writeFingerPref def
       x -> spawn [i|notify-send '"${x}" is an unknown finger layout'|]
 
     fingerLayouts :: ComplFunction
-    fingerLayouts = mkComplFunFromList' ["HHKB_Lite2_us", "Surface_type_cover"]
+    fingerLayouts = mkComplFunFromList' ["HHKB_Lite2_Family", "default_(Surface_type_cover)"]
 
     writeFingerPref :: FingersMask -> X ()
     writeFingerPref pref = do
