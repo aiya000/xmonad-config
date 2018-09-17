@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
+import XMonad.Hooks.EwmhDesktops (ewmhDesktopsStartup, ewmhDesktopsEventHook)
 import Control.Monad ((>=>))
 import Data.Monoid (All)
 import XMonad
@@ -37,7 +38,8 @@ main =
 
 
 myStartupHook :: X ()
-myStartupHook =
+myStartupHook = do
+  ewmhDesktopsStartup
   setWMName "LG3D" -- Fix startings of Java Swing apps
 
 myManageHook :: ManageHook
@@ -54,4 +56,6 @@ myMouseBindings =
   ]
 
 myHandleEventHook :: Event -> X All
-myHandleEventHook = handleEventHook def <+> fullscreenEventHook
+myHandleEventHook = handleEventHook def
+                <+> fullscreenEventHook
+                <+> ewmhDesktopsEventHook

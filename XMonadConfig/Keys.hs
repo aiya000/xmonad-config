@@ -34,7 +34,6 @@ import XMonad.Layout (ChangeLayout(..))
 import XMonad.Layout.SubLayouts (GroupMsg(..))
 import XMonad.Operations (sendMessage, withFocused)
 import XMonad.Prompt (XPConfig(..), XPPosition(..), greenXPConfig, ComplFunction, mkComplFunFromList')
-import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Prompt.Input (inputPromptWithCompl, (?+))
 import XMonad.StackSet (focusUp, focusDown, swapUp, swapDown, greedyView, shift)
 import XMonadConfig.TH
@@ -60,6 +59,7 @@ fromKeyMask' AltMask     = altMask
 fromKeyMask' SuperMask   = superMask
 fromKeyMask' ShiftMask   = shiftMask
 fromKeyMask' ControlMask = controlMask
+
 
 -- | A serializable set of `KeyMask'`
 data FingersMask = FingersMask
@@ -119,17 +119,23 @@ myKeys _ =
   in M.fromList $
     [ ((thumbMask .|. littleMask, xK_a), sinkAll)
     , ((thumbMask .|. littleMask, xK_c), kill)
+    , ((thumbMask .|. littleMask, xK_d), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
     , ((thumbMask .|. littleMask, xK_h), windows swapUp)
     , ((thumbMask .|. littleMask, xK_i), nextScreen)
-    , ((thumbMask .|. littleMask, xK_l), windows swapDown)
     , ((thumbMask .|. littleMask, xK_k), fingerLayoutMenu)
+    , ((thumbMask .|. littleMask, xK_l), windows swapDown)
+    , ((thumbMask .|. littleMask, xK_m), xmodmapMenu)
     , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
     , ((thumbMask .|. littleMask, xK_r), recompileMenu)
-    , ((thumbMask .|. ringMask, xK_s), spawn "amixer -c 1 set Master 10-") -- thumb+ring keys adjusts for MISTEL Barroco MD-600
-    , ((thumbMask .|. ringMask, xK_d), spawn "amixer -c 1 set Master 10+")
-    , ((thumbMask .|. ringMask, xK_f), spawn "amixer -c 1 set Master toggle && amixer -c 1 set Speaker unmute")
-    , ((thumbMask .|. ringMask, xK_c), spawn "light -U 5")
-    , ((thumbMask .|. ringMask, xK_v), spawn "light -A 5")
+    , ((ringMask .|. littleMask, xK_s), spawn "amixer -c 1 set Master 10-") -- thumb+ring keys adjusts for MISTEL Barroco MD-600
+    , ((ringMask .|. littleMask, xK_d), spawn "amixer -c 1 set Master 10+")
+    , ((ringMask .|. littleMask, xK_f), spawn "amixer -c 1 set Master toggle && amixer -c 1 set Speaker unmute")
+    , ((ringMask .|. littleMask, xK_c), spawn "light -U 5")
+    , ((ringMask .|. littleMask, xK_v), spawn "light -A 5")
+    --, ((ringMask .|. littleMask, xK_h), spawn "xdotool key --window $(xdotool getactivewindow) Left")
+    --, ((ringMask .|. littleMask, xK_j), spawn "xdotool key --window $(xdotool getactivewindow) Down")
+    --, ((ringMask .|. littleMask, xK_k), spawn "xdotool key --window $(xdotool getactivewindow) Up")
+    --, ((ringMask .|. littleMask, xK_l), spawn "xdotool key --window $(xdotool getactivewindow) Right")
     , ((thumbMask, xK_h), windows focusUp)
     , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
     , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
@@ -153,7 +159,7 @@ myKeys _ =
     , ((ringMask, xK_r), spawn "dmenu_run")
     , ((ringMask, xK_t), spawn myTerminal)
     -- Another KeyMask
-    , ((shiftMask, xK_F1), xmodmapMenu) -- `xmodmapMenu` should not be set as `thumbMask .|. littleMask, foo`, because often my left-win key go to somewhere
+    , ((shiftMask, xK_F1), xmodmapMenu)
     , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
     , ((shiftMask, xK_F3), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
     , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
@@ -171,9 +177,12 @@ myKeys _ =
     -- Load a .xmodmap
     xmodmapMenu :: X ()
     xmodmapMenu = void $
-      inputPromptWithCompl myXPConf "Load a .xmodmap" xmonadXmodmaps ?+ \xmodmapFile -> do
-        spawn [i|xmodmap ~/.xmonad/Xmodmap/${xmodmapFile}|]
-        spawn [i|notify-send '${xmodmapFile} did seem to be loaded :D'|]
+      inputPromptWithCompl myXPConf "Load a .xmodmap" xmonadXmodmaps ?+ \xmodmapFile ->
+        spawn [i|
+          setxkbmap -layout us -option caps:ctrl_modifier &&
+          xmodmap ~/.xmonad/Xmodmap/${xmodmapFile} &&
+          notify-send '${xmodmapFile} did seem to be loaded :D'
+        |] -- setxkbmap must be done before xmodmap, because setxkbmap overwrites.
 
     -- ~/.xmonad/Xmodmap/*
     xmonadXmodmaps :: ComplFunction
