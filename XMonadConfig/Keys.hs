@@ -120,6 +120,7 @@ myKeys _ =
     [ ((thumbMask .|. littleMask, xK_a), sinkAll)
     , ((thumbMask .|. littleMask, xK_c), kill)
     , ((thumbMask .|. littleMask, xK_d), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
+    , ((thumbMask .|. littleMask, xK_f), spawn "xfce4-find-cursor")
     , ((thumbMask .|. littleMask, xK_h), windows swapUp)
     , ((thumbMask .|. littleMask, xK_i), nextScreen)
     , ((thumbMask .|. littleMask, xK_k), fingerLayoutMenu)
