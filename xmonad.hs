@@ -1,12 +1,11 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-import XMonad.Hooks.EwmhDesktops (ewmhDesktopsStartup, ewmhDesktopsEventHook)
 import Control.Monad ((>=>))
 import Data.Monoid (All)
 import XMonad
 import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Hooks.DynamicLog (statusBar, dzenPP)
-import XMonad.Hooks.EwmhDesktops (fullscreenEventHook)
+import XMonad.Hooks.EwmhDesktops (fullscreenEventHook, ewmhDesktopsStartup, ewmhDesktopsEventHook)
 import XMonad.Hooks.ManageDocks (AvoidStruts)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
@@ -51,8 +50,8 @@ myManageHook = composeAll
 
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =
-  [ ((altMask .|. controlMask, button1), mouseResizeWindow)
-  , ((shiftMask .|. controlMask, button1), mouseMoveWindow)
+  [ ((controlMask .|. shiftMask .|. superMask, button1), mouseResizeWindow)
+  , ((controlMask .|. shiftMask .|. altMask, button1), mouseMoveWindow)
   ]
 
 myHandleEventHook :: Event -> X All
