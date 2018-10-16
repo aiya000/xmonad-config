@@ -14,7 +14,6 @@
 -- for many keyboard layouts (e.g. HHKB Lite2 US, Surface type cover, HHKB Lite2 JP + HHKB Lite2 US)
 module XMonadConfig.Keys where
 
-import Control.Concurrent (threadDelay)
 import Control.Monad (void)
 import Data.Default (Default(..))
 import Data.FileEmbed (embedOneFileOf)
@@ -240,6 +239,7 @@ asXkbmapStuff ResetSetXKBMAP   = "us" -- us by default
 
 -- | See `takeScreenShot`
 data ScreenShotType = FullScreen | ActiveWindow
+  deriving (Show)
 
 -- |
 -- Take screenshot as ScreenShotType to ~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png,
@@ -247,20 +247,5 @@ data ScreenShotType = FullScreen | ActiveWindow
 --
 -- Dependency: imagemagick, espeak, notify-send, xdotool
 takeScreenShot :: ScreenShotType -> X ()
-takeScreenShot ssType = do
-  let msg = messageOf ssType
-  screenshot ssType dateSSPath
-  spawn [i|espeak -s 150 -v +fex '${msg}'|]
-  liftIO $ threadDelay aSec
-  spawn [i|notify-send 'ScreenShot' '${msg}'|]
-  where
-    aSec = 1000000
-    dateSSPath = "~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png"
-
-    screenshot :: ScreenShotType -> FilePath -> X ()
-    screenshot FullScreen   path = spawn [i|import -window root ${path}|]
-    screenshot ActiveWindow path = spawn [i|import -window $(xdotool getwindowfocus -f) ${path}|]
-
-    messageOf :: ScreenShotType -> String
-    messageOf FullScreen   = "shot the full screen"
-    messageOf ActiveWindow = "shot the active window"
+takeScreenShot x = withHomeDir $ \homeDir ->
+  spawn [i|${homeDir :: String}/.xmonad/bin/screenshot.sh ${x}|]
