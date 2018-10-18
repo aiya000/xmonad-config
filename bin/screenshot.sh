@@ -23,5 +23,5 @@ if log=$(import -window "$window" "$png" 2>&1) ; then
   espeak -s 150 -v +fex 'Shot'
 else
   notify-send 'ScreenShot' "$log"
-  espeak -s 150 -v +fex 'Error!'
+  espeak -s 150 -v +fex '>>>>>>>>>>>>>>>>>> Error! <<<<<<<<<<<<<<<<<<'
 fi
