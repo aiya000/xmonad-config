@@ -5,7 +5,6 @@ module XMonadConfig.XConfig
   , myWorkspaces
   ) where
 
-
 myTerminal :: String
 myTerminal = "termite"
 
@@ -13,4 +12,4 @@ myWebBrowser :: String
 myWebBrowser = "vivaldi-stable"
 
 myWorkspaces :: [String]
-myWorkspaces = map show [1..4]
+myWorkspaces = map show [1 .. 4]
