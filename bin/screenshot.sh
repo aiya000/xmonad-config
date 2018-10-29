@@ -1,16 +1,11 @@
 #!/bin/bash
 
-png="$HOME/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png"
-
 case "$1" in
 FullScreen)
-    window=root
+    target=fullscrenn
     ;;
 ActiveWindow)
-    if ! window=$(xdotool getwindowfocus -f) ; then
-        notify-send 'ScreenShot' "the focus of the current window couldn't be gotten x("
-        exit 1
-    fi
+    target=window
     ;;
 *)
     notify-send 'ScreenShot' "unknown screenShot kind: '$1'"
@@ -18,7 +13,7 @@ ActiveWindow)
     ;;
 esac
 
-if log=$(import -window "$window" "$png" 2>&1) ; then
+if log=$(xfce4-screenshooter --"$target" --save ~/Picture) ; then
   notify-send 'ScreenShot' 'Shot'
   espeak -s 150 -v +fex 'Shot'
 else
