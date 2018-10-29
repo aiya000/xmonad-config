@@ -1,5 +1,5 @@
 -- |
--- Expose 'myKeys' for 'XConfig.keys'.
+-- Exposes 'myKeys' for 'XConfig.keys'.
 --
 -- This module exports compile time processings
 -- for many keyboard layouts (e.g. HHKB Lite2 US, Surface type cover, HHKB Lite2 JP + HHKB Lite2 US)
@@ -35,8 +35,8 @@ myKeys _ =
    in M.fromList $
       [ ((thumbMask .|. littleMask, xK_a), sinkAll)
       , ((thumbMask .|. littleMask, xK_c), kill)
-      , ( (thumbMask .|. littleMask, xK_d)
-        , withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
+      , ((thumbMask .|. littleMask, xK_d), menusMenu)
+      , ((thumbMask .|. littleMask, xK_x), menusMenu)
       , ((thumbMask .|. littleMask, xK_f), spawn "xfce4-find-cursor")
       , ((thumbMask .|. littleMask, xK_h), windows swapUp)
       , ((thumbMask .|. littleMask, xK_i), nextScreen)

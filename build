@@ -4,4 +4,7 @@ bin_name=$(uname -a | awk '{print $1, $13}' | sed -r 's/(.+) (.+)/xmonad-\2-\L\1
 
 cd ~/.xmonad || exit 1
 # head -1 to get a latest version if any version is existed
-stack build && rm "$bin_name" && cp "$(find .stack-work/install -type f -name xmonad-config | head -1)" "$bin_name"
+stack build && {
+    rm -f "$bin_name" ;
+    cp "$(find .stack-work/install -type f -name xmonad-config | head -1)" "$bin_name"
+}

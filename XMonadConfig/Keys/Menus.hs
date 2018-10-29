@@ -77,7 +77,7 @@ recompileMenu =
 yesNo :: ComplFunction
 yesNo = mkComplFunFromList' ["yes", "no"]
 
--- Load a .xmodmap
+-- | Load a .xmodmap
 xmodmapMenu :: X ()
 xmodmapMenu =
   void $
@@ -94,3 +94,15 @@ xmodmapMenu =
     xmonadXmodmaps _ =
       withHomeDir $
       (filter (/= "README.md") <$>) . listDirectory . (<> "/.xmonad/Xmodmap")
+
+-- | Meta/General menu
+menusMenu :: X ()
+menusMenu =
+  inputPromptWithCompl myXPConf "General" menus ?+ \case
+    "finger_layouts" -> fingerLayoutMenu
+    "start_dzen2" -> withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh")
+    "xmodmaps" -> xmodmapMenu
+    x -> spawn [i|notify-send 'unknown menu: ${x}'|]
+  where
+    menus :: ComplFunction
+    menus _ = pure ["start_dzen2", "xmodmaps", "finger_layouts"]
