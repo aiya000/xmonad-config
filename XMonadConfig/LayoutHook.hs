@@ -27,12 +27,12 @@ infixr 2 :|||
 type (:|||) = Choose
 
 type MyLayoutHook
-   = AvoidStruts :$ TwoTabbedPane :||| StackTile :||| Grid :||| Full
+  = AvoidStruts :$ TwoTabbedPane :||| StackTile :||| Grid :||| Full
 
 type TwoTabbedPane = SubTabbed TwoPane
 
 type SubTabbed x
-   = (Decoration TabbedDecoration DefaultShrinker :. Sublayout Simplest) x
+  = (Decoration TabbedDecoration DefaultShrinker :. Sublayout Simplest) x
 
 myLayoutHook :: MyLayoutHook Window
 myLayoutHook =

@@ -1,21 +1,19 @@
-{-# LANGUAGE FlexibleContexts #-}
-
-import           Control.Monad                ((>=>))
-import           Data.Monoid                  (All)
+import           Control.Monad                 ((>=>))
+import           Data.Monoid                   (All)
 import           XMonad
-import           XMonad.Config.Desktop        (desktopConfig)
-import           XMonad.Hooks.DynamicLog      (dzenPP, statusBar)
-import           XMonad.Hooks.EwmhDesktops    (ewmhDesktopsEventHook,
-                                               ewmhDesktopsStartup,
-                                               fullscreenEventHook)
-import           XMonad.Hooks.ManageDocks     (AvoidStruts)
-import           XMonad.Hooks.SetWMName       (setWMName)
-import           XMonad.Layout.LayoutModifier (ModifiedLayout)
-import           XMonad.Util.EZConfig         (additionalMouseBindings)
-import           XMonadConfig.Keys            (altMask, myKeys,
-                                               myToggleStrutsKey, superMask)
-import           XMonadConfig.LayoutHook      (myLayoutHook)
-import           XMonadConfig.XConfig         (myTerminal, myWorkspaces)
+import           XMonad.Config.Desktop         (desktopConfig)
+import           XMonad.Hooks.DynamicLog       (dzenPP, statusBar)
+import           XMonad.Hooks.EwmhDesktops     (ewmhDesktopsEventHook,
+                                                ewmhDesktopsStartup,
+                                                fullscreenEventHook)
+import           XMonad.Hooks.ManageDocks      (AvoidStruts)
+import           XMonad.Hooks.SetWMName        (setWMName)
+import           XMonad.Layout.LayoutModifier  (ModifiedLayout)
+import           XMonad.Util.EZConfig          (additionalMouseBindings)
+import           XMonadConfig.Keys             (myKeys, myToggleStrutsKey)
+import           XMonadConfig.Keys.FingersMask (altMask, superMask)
+import           XMonadConfig.LayoutHook       (myLayoutHook)
+import           XMonadConfig.XConfig          (myTerminal, myWorkspaces)
 
 main :: IO ()
 main =
@@ -34,13 +32,13 @@ main =
     , handleEventHook = myHandleEventHook
     } `additionalMouseBindings`
   myMouseBindings
-    -- Run dummy dzen2 for 'myToggleStrutsKey', please see ~/.zshrc_env for real dzen2 startup
-  where
-    dzen ::
-         LayoutClass l Window
-      => XConfig l
-      -> IO (XConfig (ModifiedLayout AvoidStruts l))
-    dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP myToggleStrutsKey
+
+-- | Run dummy dzen2 for 'myToggleStrutsKey', please see ~/.zshrc_env for real dzen2 startup
+dzen ::
+     LayoutClass l Window
+  => XConfig l
+  -> IO (XConfig (ModifiedLayout AvoidStruts l))
+dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP myToggleStrutsKey
 
 myStartupHook :: X ()
 myStartupHook = do
