@@ -12,4 +12,4 @@ myWebBrowser :: String
 myWebBrowser = "vivaldi-stable"
 
 myWorkspaces :: [String]
-myWorkspaces = map show [1 .. 4]
+myWorkspaces = map show [1..4]
