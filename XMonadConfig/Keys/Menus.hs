@@ -2,24 +2,19 @@
 
 module XMonadConfig.Keys.Menus where
 
-import           Control.Monad                 (void)
-import           Control.Monad.IO.Class        (MonadIO)
-import           Data.String                   (IsString (..))
-import           Data.String.Here              (i)
-import           System.Directory              (listDirectory)
-import           System.Environment            (getEnv)
-import           XMonad
-import           XMonad.Prompt                 (ComplFunction, XPConfig (..),
-                                                XPPosition (..), greenXPConfig,
-                                                mkComplFunFromList')
-import           XMonad.Prompt.Input           (inputPromptWithCompl, (?+))
-import           XMonadConfig.Keys.FingersMask (hhkbLiteFamilyFingers,
-                                                writeFingerPref)
+import Control.Monad (void)
+import Control.Monad.IO.Class (MonadIO)
+import Data.String (IsString (..))
+import Data.String.Here (i)
+import System.Directory (listDirectory)
+import System.Environment (getEnv)
+import XMonad
+import XMonad.Prompt (ComplFunction, XPConfig (..), XPPosition (..), greenXPConfig, mkComplFunFromList')
+import XMonad.Prompt.Input (inputPromptWithCompl, (?+))
+import XMonadConfig.Keys.FingersMask (hhkbLiteFamilyFingers, writeFingerPref)
 
 -- | Polymorphic string
-type FilePath'
-   = forall s. IsString s =>
-                 s
+type FilePath' = forall s. IsString s => s
 
 -- |
 -- Shortcut for @$HOME@ .
@@ -30,9 +25,8 @@ withHomeDir f = do
   f $ fromString homeDir
 
 -- | See `takeScreenShot`
-data ScreenShotType
-  = FullScreen
-  | ActiveWindow
+data ScreenShotType = FullScreen
+                    | ActiveWindow
   deriving (Show)
 
 -- |
@@ -97,12 +91,32 @@ xmodmapMenu =
 
 -- | Meta/General menu
 menusMenu :: X ()
-menusMenu =
-  inputPromptWithCompl myXPConf "General" menus ?+ \case
+menusMenu = inputPromptWithCompl myXPConf "General" menus ?+ \case
     "finger_layouts" -> fingerLayoutMenu
     "start_dzen2" -> withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh")
     "xmodmaps" -> xmodmapMenu
+    "eDP-1" -> edp1Menu
+    "HDMI-1" -> hdmi1Menu
     x -> spawn [i|notify-send 'unknown menu: ${x}'|]
   where
     menus :: ComplFunction
-    menus _ = pure ["start_dzen2", "xmodmaps", "finger_layouts"]
+    menus _ =
+      pure [ "start_dzen2" , "xmodmaps" , "finger_layouts" , "xrandr" , "eDP-1" , "HDMI-1" ]
+
+
+edp1Menu :: X ()
+edp1Menu =
+  inputPromptWithCompl myXPConf "xrandr --output eDP-1" scales ?+ \case
+    "0.8x0.8" -> spawn [i|xrandr --output eDP-1 --scale 0.8x0.8|]
+    "1.0x1.0" -> spawn [i|xrandr --output eDP-1 --scale 1.9x1.0|]
+    x -> spawn [i|notify-send 'unknown scale: ${x}'|]
+    where
+      scales _ = pure ["0.8x0.8", "1.0x1.0"]
+
+hdmi1Menu :: X ()
+hdmi1Menu = inputPromptWithCompl myXPConf "xrandr --output HDMI-1" scales ?+ \case
+  "1.2x1.2" -> spawn [i|xrandr --output HDMI-1 --scale 1.6x1.6|]
+  "1.6x1.6" -> spawn [i|xrandr --output HDMI-1 --scale 1.6x1.6|]
+  x -> spawn [i|notify-send 'unknown scale: ${x}'|]
+  where
+    scales _ = pure ["1.2x1.2", "1.6x1.6"]
