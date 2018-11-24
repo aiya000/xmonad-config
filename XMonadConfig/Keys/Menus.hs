@@ -114,7 +114,7 @@ edp1Menu =
 
 hdmi1Menu :: X ()
 hdmi1Menu = inputPromptWithCompl myXPConf "xrandr --output HDMI-1" scales ?+ \case
-  "1.2x1.2" -> spawn [i|xrandr --output HDMI-1 --scale 1.6x1.6|]
+  "1.2x1.2" -> spawn [i|xrandr --output HDMI-1 --scale 1.2x1.2|]
   "1.6x1.6" -> spawn [i|xrandr --output HDMI-1 --scale 1.6x1.6|]
   x -> spawn [i|notify-send 'unknown scale: ${x}'|]
   where

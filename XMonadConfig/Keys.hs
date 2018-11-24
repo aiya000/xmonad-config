@@ -34,7 +34,6 @@ myKeys _ =
     [ ((thumbMask .|. littleMask, xK_a), sinkAll)
     , ((thumbMask .|. littleMask, xK_c), kill)
     , ((thumbMask .|. littleMask, xK_d), menusMenu)
-    , ((thumbMask .|. littleMask, xK_x), menusMenu)
     , ((thumbMask .|. littleMask, xK_f), spawn "xfce4-find-cursor")
     , ((thumbMask .|. littleMask, xK_h), windows swapUp)
     , ((thumbMask .|. littleMask, xK_i), nextScreen)
@@ -80,7 +79,7 @@ myKeys _ =
     , ((shiftMask, xK_F3), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
     , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
     , ((shiftMask, xK_Print), takeScreenShot FullScreen)
-    ] <> -- Switch a workspace
+    ] <> -- Switch workspaces
     [ ((thumbMask .|. littleMask, numKey), windows $ greedyView workspace)
     | (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
     ] <> -- Move a current window to a worskpace
