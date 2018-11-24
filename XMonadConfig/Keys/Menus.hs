@@ -89,31 +89,23 @@ menusMenu =
     "finger_layouts" -> fingerLayoutMenu
     "start_dzen2" -> withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh")
     "xmodmaps" -> xmodmapMenu
-    "eDP-1" -> edp1Menu
-    "HDMI-1" -> hdmi1Menu
+    "eDP-1" -> xrandrRescaleMenu "eDP-1"
+    "HDMI-1" -> xrandrRescaleMenu "HDMI-1"
+    "DP-1" -> xrandrRescaleMenu "DP-1"
     x -> spawn [i|notify-send 'unknown menu: ${x}'|]
   where
     menus _ = pure
       [ "HDMI-1"
       , "eDP-1"
+      , "DP-1"
       , "start_dzen2"
       , "xmodmaps"
       , "finger_layouts"
       ]
 
-edp1Menu :: X ()
-edp1Menu =
-  inputPromptWithCompl myXPConf "xrandr --output eDP-1" scales ?+ \case
-    "0.8x0.8" -> spawn [i|xrandr --output eDP-1 --scale 0.8x0.8|]
-    "1.0x1.0" -> spawn [i|xrandr --output eDP-1 --scale 1.9x1.0|]
-    x -> spawn [i|notify-send 'unknown scale: ${x}'|]
+xrandrRescaleMenu :: String -> X ()
+xrandrRescaleMenu output =
+  inputPromptWithCompl myXPConf [i|xrandr --output ${output} --scale {your choice}|] scales ?+ \scale ->
+    spawn [i|xrandr --output ${output} --scale ${scale} 2>&1 | xargs notify-send|]
     where
-      scales _ = pure ["0.8x0.8", "1.0x1.0"]
-
-hdmi1Menu :: X ()
-hdmi1Menu = inputPromptWithCompl myXPConf "xrandr --output HDMI-1" scales ?+ \case
-  "1.2x1.2" -> spawn [i|xrandr --output HDMI-1 --scale 1.2x1.2|]
-  "1.6x1.6" -> spawn [i|xrandr --output HDMI-1 --scale 1.6x1.6|]
-  x -> spawn [i|notify-send 'unknown scale: ${x}'|]
-  where
-    scales _ = pure ["1.2x1.2", "1.6x1.6"]
+      scales _ = pure ["0.8x0.8", "1.0x1.0", "1.2x1.2", "1.6x1.6"]
