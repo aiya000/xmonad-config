@@ -94,14 +94,12 @@ menusMenu =
     x -> spawn [i|notify-send 'unknown menu: ${x}'|]
   where
     menus _ = pure
-      [ "start_dzen2"
+      [ "HDMI-1"
+      , "eDP-1"
+      , "start_dzen2"
       , "xmodmaps"
       , "finger_layouts"
-      , "xrandr"
-      , "eDP-1"
-      , "HDMI-1" 
       ]
-
 
 edp1Menu :: X ()
 edp1Menu =
