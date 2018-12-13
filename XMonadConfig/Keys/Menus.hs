@@ -108,4 +108,4 @@ xrandrRescaleMenu output =
   inputPromptWithCompl myXPConf [i|xrandr --output ${output} --scale {your choice}|] scales ?+ \scale ->
     spawn [i|xrandr --output ${output} --scale ${scale} 2>&1 | xargs notify-send|]
     where
-      scales _ = pure ["0.8x0.8", "1.0x1.0", "1.2x1.2", "1.6x1.6"]
+      scales _ = pure ["0.6x0.6", "0.8x0.8", "1.0x1.0", "1.2x1.2", "1.6x1.6"]

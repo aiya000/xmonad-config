@@ -80,5 +80,5 @@ dependencies:
 
 executables:
   xmonad-config:
-    main: xmonad.hs
+    main: Main.hs
     source-dirs: ./.
