@@ -16,19 +16,16 @@ import XMonad.Layout.SubLayouts (Sublayout, subTabbed)
 import XMonad.Layout.Tabbed (TabbedDecoration)
 import XMonad.Layout.TwoPane (TwoPane (..))
 
-type (:$) = ModifiedLayout
-type (:.) x y z = x :$ (y :$ z)
-type (:|||) = Choose
-
-infixr 1 :$
-infixr 2 :|||
-
-type MyLayoutHook = AvoidStruts :$ TwoTabbedPane :||| StackTile :||| Grid :||| Full
-type TwoTabbedPane = SubTabbed TwoPane
-type SubTabbed x = (Decoration TabbedDecoration DefaultShrinker :. Sublayout Simplest) x
-
-myLayoutHook :: MyLayoutHook Window
+myLayoutHook :: ModifiedLayout
+                        AvoidStruts
+                        (Choose
+                           (ModifiedLayout
+                              (Decoration TabbedDecoration DefaultShrinker)
+                              (ModifiedLayout (Sublayout Simplest) TwoPane))
+                           (Choose StackTile (Choose Grid (Choose TwoPane Full))))
+                        Window
 myLayoutHook = avoidStruts $
-  twoTabbedPane ||| StackTile 1 (3 / 200) (1 / 2) ||| Grid ||| Full
+  twoTabbedPane ||| StackTile 1 (3 / 200) (1 / 2) ||| Grid ||| gimp ||| Full
   where
     twoTabbedPane = subTabbed $ TwoPane (1 / 55) (1 / 2)
+    gimp = TwoPane (1 / 10) (1 / 6)
