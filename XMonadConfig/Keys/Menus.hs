@@ -92,6 +92,7 @@ menusMenu =
     "eDP-1" -> xrandrRescaleMenu "eDP-1"
     "HDMI-1" -> xrandrRescaleMenu "HDMI-1"
     "DP-1" -> xrandrRescaleMenu "DP-1"
+    "slock" -> spawn "slock"
     x -> spawn [i|notify-send 'unknown menu: ${x}'|]
   where
     menus _ = pure
@@ -101,6 +102,7 @@ menusMenu =
       , "start_dzen2"
       , "xmodmaps"
       , "finger_layouts"
+      , "slock"
       ]
 
 xrandrRescaleMenu :: String -> X ()
