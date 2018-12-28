@@ -1,0 +1,52 @@
+#!/usr/bin/env stack
+-- stack --resolver lts-12.14 --install-ghc runghc --package shelly --package text --package easy-file --package here --package safe-exceptions
+
+{-# LANGUAGE ExtendedDefaultRules #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
+
+import Control.Exception.Safe (SomeException, catch)
+import Control.Monad (forM_, when)
+import Control.Monad.IO.Class (liftIO)
+import Data.Monoid ((<>))
+import Data.String.Here (i)
+import Data.Text (Text)
+import Shelly (Sh, shelly, verbosely)
+import System.EasyFile (getCurrentDirectory, setCurrentDirectory)
+import System.Exit (exitFailure)
+import qualified Data.Text as Text
+import qualified Data.Text.IO as Text
+import qualified Shelly as Sh
+
+default (Text)
+
+main :: IO ()
+main = do
+  xmonadDir <- getCurrentDirectory
+  setCurrentDirectory xmonadDir `catch` exit xmonadDir
+  putStrLn [i|${xmonadDir}/replace starts|]
+  shelly . verbosely $ replace xmonadDir
+  where
+    exit :: FilePath -> SomeException -> IO a
+    exit xmonadDir e = do
+      putStrLn [i|${xmonadDir} is not found (${e})|]
+      exitFailure
+
+replace :: FilePath -> Sh ()
+replace xmonadDir = do
+  stdout <- Text.unlines <$> sequence tasks `catch` exit xmonadDir
+  liftIO $ Text.writeFile [i|${xmonadDir}/xmonad-config.log|] stdout
+  where
+    tasks =
+      [ Sh.run "stack" ["clean"]
+      , Sh.run "stack" ["install"]
+      , Sh.run "stack" ["exec", "--", "xmonad-config", "--recompile"]
+      , Sh.run "stack" ["exec", "--", "xmonad-config", "--restart"]
+      , Sh.run "killall" ["xmonad-x86_64-linux"]
+      , Sh.run "stack" ["exec", "--", "xmonad-config"]
+      ]
+
+    exit :: FilePath -> SomeException -> Sh a
+    exit xmonadDir e = liftIO $ do
+      writeFile [i|${xmonadDir}/xmonad-config.log|] $ show e
+      exitFailure

@@ -57,7 +57,7 @@ recompileMenu :: X ()
 recompileMenu =
   inputPromptWithCompl myXPConf "Reload and restart xmonad?" yesNo ?+ \case
     "yes" -> do
-      withHomeDir $ spawn . (<> "/.xmonad/replace.sh")
+      withHomeDir $ spawn . (<> "/.xmonad/replace.hs")
       spawn [i|notify-send 'Recompiling...'|]
     "no" -> pure ()
     x ->
