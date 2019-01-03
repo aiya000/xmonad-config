@@ -11,7 +11,7 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Monoid ((<>))
 import Data.String.Here (i)
 import Data.Text (Text)
-import Shelly (Sh, shelly, verbosely)
+import Shelly (Sh, shelly, verbosely, (-|-))
 import System.EasyFile (getCurrentDirectory, setCurrentDirectory)
 import System.Exit (exitFailure)
 import qualified Data.Text as Text
@@ -42,9 +42,16 @@ replace xmonadDir = do
       , Sh.run "stack" ["install"]
       , Sh.run "stack" ["exec", "--", "xmonad-config", "--recompile"]
       , Sh.run "stack" ["exec", "--", "xmonad-config", "--restart"]
-      , Sh.run "killall" ["xmonad-x86_64-linux"]
+      , killXMonad
       , Sh.run "stack" ["exec", "--", "xmonad-config"]
       ]
+
+    killXMonad = do
+      ps <- Sh.run "ps" ["aux"] -|-
+            Sh.run "grep" ["xmonad-x86_64-linux"] -|-
+            Sh.run "grep" ["-v", "grep"]
+      let pid = (!! 1) $ Text.words ps
+      Sh.run "kill" [pid]
 
     exit :: FilePath -> SomeException -> Sh a
     exit xmonadDir e = liftIO $ do

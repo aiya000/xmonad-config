@@ -55,7 +55,7 @@ myKeys _ =
     , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
     , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
     , ((thumbMask, xK_l), windows focusDown)
-    , ((ringMask, xK_F1), spawn "light -U 5") -- ring+Fn keys adjusts for Surface type cover's seal
+    , ((ringMask, xK_F1), spawn "light -U 5")
     , ((ringMask, xK_F2), spawn "light -A 5")
     , ((ringMask, xK_F4), spawn "amixer -c 1 set Master toggle && amixer -c 1 set Speaker unmute")
     , ((ringMask, xK_F5), spawn "amixer -c 1 set Master 10-")

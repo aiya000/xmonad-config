@@ -4,7 +4,7 @@ module XMonadConfig.LayoutHook
   ( myLayoutHook
   ) where
 
-import XMonad (Window)
+import XMonad (Window, Mirror(..))
 import XMonad.Hooks.ManageDocks (AvoidStruts, avoidStruts)
 import XMonad.Layout (Choose, Full (..), (|||))
 import XMonad.Layout.Decoration (Decoration, DefaultShrinker)
@@ -22,10 +22,13 @@ myLayoutHook :: ModifiedLayout
                            (ModifiedLayout
                               (Decoration TabbedDecoration DefaultShrinker)
                               (ModifiedLayout (Sublayout Simplest) TwoPane))
-                           (Choose StackTile (Choose Grid (Choose TwoPane Full))))
+                           (Choose StackTile (Choose Grid (Choose (Mirror StackTile) Full))))
                         Window
 myLayoutHook = avoidStruts $
-  twoTabbedPane ||| StackTile 1 (3 / 200) (1 / 2) ||| Grid ||| gimp ||| Full
+  twoTabbedPane ||| stack ||| Grid ||| gimp ||| Full
   where
+    nanika = 3 / 200
+
+    stack = StackTile 1 nanika (1 / 2)
     twoTabbedPane = subTabbed $ TwoPane (1 / 55) (1 / 2)
-    gimp = TwoPane (1 / 10) (1 / 6)
+    gimp = Mirror $ StackTile 1 nanika (1 / 6)
