@@ -5,7 +5,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 
-import Control.Exception.Safe (SomeException, catch)
+import Control.Exception.Safe (SomeException, handle)
 import Control.Monad (forM_, when)
 import Control.Monad.IO.Class (liftIO)
 import Data.Monoid ((<>))
@@ -23,18 +23,23 @@ default (Text)
 main :: IO ()
 main = do
   xmonadDir <- getCurrentDirectory
-  setCurrentDirectory xmonadDir `catch` exit xmonadDir
-  putStrLn [i|${xmonadDir}/replace starts|]
-  shelly . verbosely $ replace xmonadDir
+  let exit'  = exit xmonadDir
+  let start' = start xmonadDir
+  handle exit' start'
   where
     exit :: FilePath -> SomeException -> IO a
     exit xmonadDir e = do
       putStrLn [i|${xmonadDir} is not found (${e})|]
       exitFailure
 
+    start xmonadDir = do
+      setCurrentDirectory xmonadDir
+      putStrLn [i|${xmonadDir}/replace starts|]
+      shelly . verbosely $ replace xmonadDir
+
 replace :: FilePath -> Sh ()
-replace xmonadDir = do
-  stdout <- Text.unlines <$> sequence tasks `catch` exit xmonadDir
+replace xmonadDir = handle (exit xmonadDir) $ do
+  stdout <- Text.unlines <$> sequence tasks
   liftIO $ Text.writeFile [i|${xmonadDir}/xmonad-config.log|] stdout
   where
     tasks =
