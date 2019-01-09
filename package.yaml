@@ -72,6 +72,7 @@ dependencies:
   - extra
   - file-embed
   - here
+  - mtl
   - safe
   - shelly
   - text
