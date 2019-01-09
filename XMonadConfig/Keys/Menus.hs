@@ -2,15 +2,21 @@
 
 module XMonadConfig.Keys.Menus where
 
+import Control.Monad.Except (catchError)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString (..))
 import Data.String.Here (i)
+import Data.Text (Text)
+import Shelly (Sh, shelly)
 import System.Directory (listDirectory)
 import System.Environment (getEnv)
 import XMonad
 import XMonad.Prompt (ComplFunction, XPConfig (..), XPPosition (..), greenXPConfig)
 import XMonad.Prompt.Input (inputPromptWithCompl, (?+))
 import XMonadConfig.Keys.FingersMask (hhkbLiteFamilyFingers, writeFingerPref)
+import qualified Shelly as Sh
+
+default (Text)
 
 -- | Polymorphic string
 type FilePath' = forall s. IsString s => s
@@ -54,15 +60,22 @@ fingerLayoutMenu =
 
 -- | Compile, replace and restart this xmonad
 recompileMenu :: X ()
-recompileMenu =
+recompileMenu = flip catchError recover $
   inputPromptWithCompl myXPConf "Reload and restart xmonad?" yesNo ?+ \case
-    "yes" -> do
-      withHomeDir $ spawn . (<> "/.xmonad/replace.hs")
-      spawn [i|notify-send 'Recompiling...'|]
+    "yes" -> shelly . withHomeDir' $ \homeDir -> do
+      let replace = Sh.fromText (homeDir :: Text) <> "/.xmonad/replace.hs"
+      Sh.run_ "notify-send" ["Recompiling..."]
+      Sh.run_ replace []
+      Sh.run_ "notify-send" ["end"]
     "no" -> pure ()
     x ->
       spawn
         [i|notify-send 'Please confirm with "yes" or "no": you took "${x}"'|]
+  where
+    withHomeDir' :: (Text -> Sh ()) -> Sh ()
+    withHomeDir' = withHomeDir
+
+    recover e = spawn [i|notify-send '${e}'|]
 
 yesNo :: ComplFunction
 yesNo _ = pure ["yes", "no"]
