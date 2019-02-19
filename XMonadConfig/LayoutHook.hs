@@ -8,13 +8,10 @@ module XMonadConfig.LayoutHook
 
 import XMonad (Window)
 import XMonad.Hooks.ManageDocks (avoidStruts)
-import XMonad.Layout (Full (..), (|||))
-import XMonad.Layout.Grid (Grid (..))
-import XMonad.Layout.StackTile (StackTile (..))
-import XMonad.Layout.SubLayouts (subTabbed)
+import XMonad.Layout (Full (..), (|||), Tall(..))
 import XMonad.Layout.TwoPane (TwoPane (..))
 
 myLayoutHook :: _ Window
-myLayoutHook = avoidStruts $ twoTabbedPane ||| Full
-  where
-    twoTabbedPane = subTabbed $ TwoPane (1 / 55) (1 / 2)
+myLayoutHook = avoidStruts $
+  Full |||
+  TwoPane (1 / 55) (1 / 2)

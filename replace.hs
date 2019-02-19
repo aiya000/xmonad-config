@@ -43,8 +43,7 @@ replace xmonadDir = handle (exit xmonadDir) $ do
   liftIO $ Text.writeFile [i|${xmonadDir}/xmonad-config.log|] stdout
   where
     tasks =
-      [ Sh.run "stack" ["clean"]
-      , Sh.run "stack" ["install"]
+      [ Sh.run "stack" ["install"]
       , Sh.run "stack" ["exec", "--", "xmonad-config", "--recompile"]
       , Sh.run "stack" ["exec", "--", "xmonad-config", "--restart"]
       ]
