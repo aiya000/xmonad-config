@@ -9,9 +9,11 @@ module XMonadConfig.LayoutHook
 import XMonad (Window)
 import XMonad.Hooks.ManageDocks (avoidStruts)
 import XMonad.Layout (Full (..), (|||), Tall(..))
+import XMonad.Layout.Grid (Grid(..))
 import XMonad.Layout.TwoPane (TwoPane (..))
 
 myLayoutHook :: _ Window
 myLayoutHook = avoidStruts $
-  Full |||
-  TwoPane (1 / 55) (1 / 2)
+  TwoPane (1 / 55) (1 / 2) |||
+  Grid |||
+  Full
