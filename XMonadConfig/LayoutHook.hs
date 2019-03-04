@@ -15,5 +15,5 @@ import XMonad.Layout.TwoPane (TwoPane (..))
 myLayoutHook :: _ Window
 myLayoutHook = avoidStruts $
   TwoPane (1 / 55) (1 / 2) |||
-  Grid |||
-  Full
+  Full |||
+  Grid

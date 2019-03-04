@@ -29,7 +29,7 @@ main = dzen >=> xmonad $ desktopConfig
   }
   `additionalMouseBindings` myMouseBindings
   where
-    -- | Run dummy dzen2 for 'myToggleStrutsKey', please see ~/.zshrc_env for real dzen2 startup
+    -- | Runs the dummy dzen2 for 'myToggleStrutsKey', please see ~/bin/dzen2statusbar.sh for the real dzen2 starting up
     dzen :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
     dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP myToggleStrutsKey
 
