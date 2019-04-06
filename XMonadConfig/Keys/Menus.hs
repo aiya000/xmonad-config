@@ -105,6 +105,7 @@ menusMenu =
     "eDP-1" -> xrandrRescaleMenu "eDP-1"
     "HDMI-1" -> xrandrRescaleMenu "HDMI-1"
     "DP-1" -> xrandrRescaleMenu "DP-1"
+    "DVI-I-1-1" -> xrandrRescaleMenu "DVI-I-1-1"
     "slock" -> spawn "slock"
     x -> spawn [i|notify-send 'unknown menu: ${x}'|]
   where
@@ -112,6 +113,7 @@ menusMenu =
       [ "HDMI-1"
       , "eDP-1"
       , "DP-1"
+      , "DVI-I-1-1"
       , "start_dzen2"
       , "xmodmaps"
       , "finger_layouts"
