@@ -8,13 +8,13 @@ import Data.String (IsString (..))
 import Data.String.Here (i)
 import Data.Text (Text)
 import Shelly (Sh, shelly)
+import qualified Shelly as Sh
 import System.Directory (listDirectory)
 import System.Environment (getEnv)
 import XMonad
 import XMonad.Prompt (ComplFunction, XPConfig (..), XPPosition (..), greenXPConfig)
 import XMonad.Prompt.Input (inputPromptWithCompl, (?+))
 import XMonadConfig.Keys.FingersMask (hhkbLiteFamilyFingers, writeFingerPref)
-import qualified Shelly as Sh
 
 default (Text)
 
@@ -38,7 +38,12 @@ data ScreenShotType = FullScreen
 -- Take screenshot as ScreenShotType to ~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png,
 -- and notify to finish as screen and voice message
 --
--- Dependency: imagemagick, espeak, notify-send, xdotool
+-- Dependency:
+-- - xfce4-screenshooter
+--
+-- Optional:
+-- - espeak
+-- - notify-send
 takeScreenShot :: ScreenShotType -> X ()
 takeScreenShot x = withHomeDir $ \homeDir ->
   spawn [i|${homeDir :: String}/.xmonad/bin/screenshot.sh ${x}|]
