@@ -8,7 +8,7 @@ module XMonadConfig.LayoutHook
 
 import XMonad (Window)
 import XMonad.Hooks.ManageDocks (avoidStruts)
-import XMonad.Layout (Full (..), (|||), Tall(..))
+import XMonad.Layout (Full (..), (|||))
 import XMonad.Layout.Grid (Grid(..))
 import XMonad.Layout.TwoPane (TwoPane (..))
 

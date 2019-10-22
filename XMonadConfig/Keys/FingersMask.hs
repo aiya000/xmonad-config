@@ -3,6 +3,7 @@
 
 module XMonadConfig.Keys.FingersMask where
 
+import qualified Data.ByteString.Char8 as ByteString
 import Data.Default (Default (..))
 import Data.FileEmbed (embedOneFileOf)
 import Data.Maybe (fromMaybe)
@@ -10,7 +11,6 @@ import Data.String.Here (i)
 import Safe (readMay)
 import XMonad
 import XMonadConfig.TH (currentFingersPath, currentFingersPaths)
-import qualified Data.ByteString.Char8 as ByteString
 
 altMask :: KeyMask
 altMask = mod1Mask
@@ -19,17 +19,17 @@ superMask :: KeyMask
 superMask = mod4Mask
 
 -- | Serializable `KeyMask` for known key masks
-data KeyMask' = AltMask
+data KeyMask' = CapsLockMask
               | SuperMask
               | ShiftMask
               | ControlMask
   deriving (Show, Read)
 
 fromKeyMask' :: KeyMask' -> KeyMask
-fromKeyMask' AltMask     = altMask
-fromKeyMask' SuperMask   = superMask
-fromKeyMask' ShiftMask   = shiftMask
-fromKeyMask' ControlMask = controlMask
+fromKeyMask' CapsLockMask = lockMask
+fromKeyMask' SuperMask    = superMask
+fromKeyMask' ShiftMask    = shiftMask
+fromKeyMask' ControlMask  = controlMask
 
 -- | A serializable set of `KeyMask'`
 data FingersMask = FingersMask
@@ -50,13 +50,13 @@ instance Default FingersMask where
   def = FingersMask
     { ringMask' = SuperMask
     , littleMask' = ControlMask
-    , thumbMask' = AltMask
+    , thumbMask' = CapsLockMask
     }
 
 -- | A 'FingersMask' layout for HHKB Lite2 us keyboard
 hhkbLiteFamilyFingers :: FingersMask
 hhkbLiteFamilyFingers = FingersMask
-  { ringMask' = AltMask
+  { ringMask' = CapsLockMask
   , littleMask' = ControlMask
   , thumbMask' = SuperMask
   }

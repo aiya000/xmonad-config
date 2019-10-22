@@ -1,1 +1,1 @@
-FingersMask {ringMask' = AltMask, littleMask' = ControlMask, thumbMask' = SuperMask}
+FingersMask {ringMask' = CapsLockMask, littleMask' = ControlMask, thumbMask' = SuperMask}
