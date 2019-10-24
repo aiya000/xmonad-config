@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver lts-12.14 --install-ghc runghc --package shelly --package text --package easy-file --package here --package safe-exceptions
+-- stack --resolver lts-13.22 --install-ghc runghc --package shelly --package text --package easy-file --package here --package safe-exceptions
 
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -11,12 +11,12 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Monoid ((<>))
 import Data.String.Here (i)
 import Data.Text (Text)
-import Shelly (Sh, shelly, verbosely, (-|-))
-import System.EasyFile (getCurrentDirectory, setCurrentDirectory)
-import System.Exit (exitFailure)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
+import Shelly (Sh, shelly, verbosely, (-|-))
 import qualified Shelly as Sh
+import System.EasyFile (getCurrentDirectory, setCurrentDirectory)
+import System.Exit (exitFailure)
 
 default (Text)
 
