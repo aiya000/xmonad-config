@@ -14,7 +14,6 @@ import System.Environment (getEnv)
 import XMonad
 import XMonad.Prompt (ComplFunction, XPConfig (..), XPPosition (..), greenXPConfig)
 import XMonad.Prompt.Input (inputPromptWithCompl, (?+))
-import XMonadConfig.Keys.FingersMask (hhkbLiteFamilyFingers, writeFingerPref)
 
 default (Text)
 
@@ -53,15 +52,6 @@ myXPConf = greenXPConfig
   { font = "xft:Ricty:Regular:size=10:antialias=true"
   , position = Top
   }
-
-fingerLayoutMenu :: X ()
-fingerLayoutMenu =
-  inputPromptWithCompl myXPConf "Change keymasks" fingerLayouts ?+ \case
-    "HHKB_Lite2_Family" -> writeFingerPref hhkbLiteFamilyFingers
-    "default_(Surface_type_cover)" -> writeFingerPref def
-    x -> spawn [i|notify-send '"${x}" is an unknown finger layout'|]
-  where
-    fingerLayouts _ = pure ["HHKB_Lite2_Family", "default_(Surface_type_cover)"]
 
 -- | Compile, replace and restart this xmonad
 recompileMenu :: X ()
@@ -104,7 +94,6 @@ xmodmapMenu =
 menusMenu :: X ()
 menusMenu =
   inputPromptWithCompl myXPConf "General" menus ?+ \case
-    "finger_layouts" -> fingerLayoutMenu
     "start_dzen2" -> withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh")
     "xmodmaps" -> xmodmapMenu
     "eDP-1" -> xrandrRescaleMenu "eDP-1"
@@ -121,7 +110,6 @@ menusMenu =
       , "DVI-I-1-1"
       , "start_dzen2"
       , "xmodmaps"
-      , "finger_layouts"
       , "slock"
       ]
 

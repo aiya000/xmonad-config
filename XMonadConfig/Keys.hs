@@ -6,6 +6,7 @@
 module XMonadConfig.Keys where
 
 import Data.Map.Lazy (Map)
+import qualified Data.Map.Lazy as M
 import Data.Semigroup ((<>))
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
@@ -18,7 +19,6 @@ import XMonad.StackSet (focusDown, focusUp, greedyView, shift, swapDown, swapUp)
 import XMonadConfig.Keys.FingersMask (currentFingers, fromFingersMask)
 import XMonadConfig.Keys.Menus
 import XMonadConfig.XConfig (myTerminal, myWebBrowser, myWorkspaces)
-import qualified Data.Map.Lazy as M
 
 type Keys = XConfig Layout -> Map (KeyMask, KeySym) (X ())
 
@@ -37,7 +37,6 @@ myKeys _ =
     , ((thumbMask .|. littleMask, xK_f), spawn "xfce4-find-cursor")
     , ((thumbMask .|. littleMask, xK_h), windows swapUp)
     , ((thumbMask .|. littleMask, xK_i), nextScreen)
-    , ((thumbMask .|. littleMask, xK_k), fingerLayoutMenu)
     , ((thumbMask .|. littleMask, xK_l), windows swapDown)
     , ((thumbMask .|. littleMask, xK_m), xmodmapMenu)
     , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)

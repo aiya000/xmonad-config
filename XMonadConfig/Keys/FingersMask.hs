@@ -1,16 +1,7 @@
-{-# LANGUAGE QuasiQuotes     #-}
-{-# LANGUAGE TemplateHaskell #-}
-
 module XMonadConfig.Keys.FingersMask where
 
-import qualified Data.ByteString.Char8 as ByteString
 import Data.Default (Default (..))
-import Data.FileEmbed (embedOneFileOf)
-import Data.Maybe (fromMaybe)
-import Data.String.Here (i)
-import Safe (readMay)
 import XMonad
-import XMonadConfig.TH (currentFingersPath, currentFingersPaths)
 
 altMask :: KeyMask
 altMask = mod1Mask
@@ -20,6 +11,7 @@ superMask = mod4Mask
 
 -- | Serializable `KeyMask` for known key masks
 data KeyMask' = CapsLockMask
+              | AltMask
               | SuperMask
               | ShiftMask
               | ControlMask
@@ -27,6 +19,7 @@ data KeyMask' = CapsLockMask
 
 fromKeyMask' :: KeyMask' -> KeyMask
 fromKeyMask' CapsLockMask = lockMask
+fromKeyMask' AltMask      = altMask
 fromKeyMask' SuperMask    = superMask
 fromKeyMask' ShiftMask    = shiftMask
 fromKeyMask' ControlMask  = controlMask
@@ -50,28 +43,9 @@ instance Default FingersMask where
   def = FingersMask
     { ringMask' = SuperMask
     , littleMask' = ControlMask
-    , thumbMask' = CapsLockMask
+    , thumbMask' = AltMask
     }
 
--- | A 'FingersMask' layout for HHKB Lite2 us keyboard
-hhkbLiteFamilyFingers :: FingersMask
-hhkbLiteFamilyFingers = FingersMask
-  { ringMask' = CapsLockMask
-  , littleMask' = ControlMask
-  , thumbMask' = SuperMask
-  }
-
--- |
--- On the compile time,
--- load currentFingers file if it is existent,
--- or Load currentFingers-default (usually, currentFingers-default is existent),
--- or use `Default` of `FingersMask`.
+-- | NOTE: Implement new behavior that chooses default layout or something if layout changing needed
 currentFingers :: FingersMask
-currentFingers = fromMaybe def . readMay $
-  ByteString.unpack $(embedOneFileOf currentFingersPaths)
-
--- | Save!
-writeFingerPref :: FingersMask -> X ()
-writeFingerPref pref = do
-  liftIO . writeFile currentFingersPath $ show pref
-  spawn [i|notify-send 'Making a preference was succeed, now you can replace xmonad!'|]
+currentFingers = def
