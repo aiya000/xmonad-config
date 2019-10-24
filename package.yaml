@@ -70,7 +70,6 @@ dependencies:
   - directory
   - easy-file
   - extra
-  - file-embed
   - here
   - mtl
   - safe
