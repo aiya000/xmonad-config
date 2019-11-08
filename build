@@ -1,10 +1,17 @@
 #!/bin/bash
 
-bin_name=$(uname -a | awk '{print $1, $13}' | sed -r 's/(.+) (.+)/xmonad-\2-\L\1/')  # I checked in only x86_64 env
+# e.g. xmonad-x86_64-linux
+# bin_name=$(uname -a | awk '{print $1, $13}' | sed -r 's/(.+) (.+)/xmonad-\2-\L\1/')  # I checked in only x86_64 env
+
+if ! (uname -a | grep x86_64 > /dev/null 2>&1) ; then
+    echo "./build doesn't support non x86_64 env." > /dev/stderr
+    exit 1
+fi
+
 
 cd ~/.xmonad || exit 1
 # head -1 to get a latest version if any version is existed
 stack build && {
-    rm -f "$bin_name" ;
-    cp "$(find .stack-work/install -type f -name xmonad-config | head -1)" "$bin_name"
+    rm -f ./xmonad-x86_64-linux ;
+    cp "$(find .stack-work/install -type f -name xmonad-config | head -1)" ./xmonad-x86_64-linux
 }
