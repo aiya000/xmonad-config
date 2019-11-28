@@ -8,10 +8,20 @@ if ! (uname -a | grep x86_64 > /dev/null 2>&1) ; then
     exit 1
 fi
 
-
 cd ~/.xmonad || exit 1
-# head -1 to get a latest version if any version is existed
-stack build && {
-    rm -f ./xmonad-x86_64-linux ;
-    cp "$(find .stack-work/install -type f -name xmonad-config | head -1)" ./xmonad-x86_64-linux
-}
+
+if ! stack build ; then
+    echo 'stack build has gone with an unknown reason.' > /dev/stderr
+    exit 1
+fi
+
+# Like xmonad's --replace
+
+binary=$(find .stack-work/install -type f -name xmonad-config)
+if [[ $(echo "$binary" | wc -l) -gt 1 ]] ; then
+    echo 'two or more binary found. Please retry after "rm -rf .stack-work".' > /dev/stderr
+    exit 1
+fi
+
+cp -f "$binary" ./xmonad-x86_64-linux && \
+    echo "--replace succeed!"
