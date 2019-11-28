@@ -81,13 +81,13 @@ myKeys _ = M.fromList $
 
     -- NOTE: 1 is omitted because it is hard to type
     switchingWorkspaces = do
-        (numKey, workspace) <- zip [xK_2 .. xK_9] myWorkspaces
+        (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
         let keymap = (thumbMask .|. littleMask, numKey)
         let switching = windows $ greedyView workspace
         pure (keymap, switching)
 
     puttingWindowsToWorkspace = do
-      (numKey, workspace) <- zip [xK_2 .. xK_9] myWorkspaces
+      (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
       let keymap = (ringMask, numKey)
       let putting = windows $ shift workspace
       pure (keymap, putting)
