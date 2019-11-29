@@ -47,8 +47,8 @@ myManageHook = composeAll
 
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =
-  [ ((controlMask .|. shiftMask .|. superMask, button1), mouseResizeWindow)
-  , ((controlMask .|. shiftMask .|. altMask, button1), mouseMoveWindow)
+  [ ((shiftMask .|. superMask, button1), mouseResizeWindow)
+  , ((controlMask .|. altMask, button1), mouseMoveWindow)
   ]
 
 myHandleEventHook :: Event -> X All
