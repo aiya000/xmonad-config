@@ -16,24 +16,24 @@ import XMonad.Layout (ChangeLayout (..))
 import XMonad.Layout.SubLayouts (GroupMsg (..))
 import XMonad.Operations (sendMessage, withFocused)
 import XMonad.StackSet (focusDown, focusUp, greedyView, shift, swapDown, swapUp)
-import XMonadConfig.Keys.FingersMask (currentFingers, fromFingersMask)
+import XMonadConfig.Keys.FingersMask (FingersMask, fromFingersMask)
 import XMonadConfig.Keys.Menus
 import XMonadConfig.XConfig (myTerminal, myWebBrowser, myWorkspaces)
 
 type Keys = XConfig Layout -> Map (KeyMask, KeySym) (X ())
 
-myToggleStrutsKey :: XConfig l -> (KeyMask, KeySym)
-myToggleStrutsKey _ =
-  let (_, littleMask, thumbMask) = fromFingersMask currentFingers
+myToggleStrutsKey :: FingersMask -> XConfig l -> (KeyMask, KeySym)
+myToggleStrutsKey fingers _ =
+  let (_, littleMask, thumbMask) = fromFingersMask fingers
   in (thumbMask .|. littleMask, xK_g)
 
-myKeys :: Keys
-myKeys _ = M.fromList $
+myKeys :: FingersMask -> Keys
+myKeys fingers _ = M.fromList $
   keys <>
   switchingWorkspaces <>
   puttingWindowsToWorkspace
   where
-    (ringMask, littleMask, thumbMask) = fromFingersMask currentFingers
+    (ringMask, littleMask, thumbMask) = fromFingersMask fingers
 
     keys =
       [ ((thumbMask .|. littleMask, xK_a), sinkAll)
