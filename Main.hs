@@ -30,8 +30,8 @@ main = dzen >=> xmonad $ desktopConfig
   }
   `additionalMouseBindings` myMouseBindings
   where
-    fingers = FingersMask.surfacePro3
-    -- fingers = FingersMask.hhkbLite2US
+    -- fingers = FingersMask.surfacePro3
+    fingers = FingersMask.hhkbLite2US
 
     -- | Runs the dummy dzen2 for 'myToggleStrutsKey', please see ~/bin/dzen2statusbar.sh for the real dzen2 starting up
     dzen :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
@@ -41,6 +41,7 @@ myStartupHook :: X ()
 myStartupHook = do
   ewmhDesktopsStartup
   setWMName "LG3D" -- Fix startings of Java Swing apps
+  spawn myTerminal
 
 myManageHook :: ManageHook
 myManageHook = composeAll
