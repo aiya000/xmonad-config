@@ -73,7 +73,7 @@ myKeys fingers _ = M.fromList $
       , ((ringMask, xK_m), spawn "pavucontrol")
       , ((ringMask, xK_r), spawn "dmenu_run")
       , ((ringMask, xK_t), spawn myTerminal)
-      , ((ringMask, xK_v), withHomeDir $ spawn . (<> "/bin/gvim.sh"))
+      , ((ringMask, xK_g), withHomeDir $ spawn . (<> "/bin/gvim.sh"))
       -- Another KeyMask
       , ((shiftMask, xK_F1), xmodmapMenu)
       , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
