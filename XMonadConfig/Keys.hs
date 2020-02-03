@@ -38,14 +38,13 @@ myKeys fingers _ = M.fromList $
     keys =
       [ ((thumbMask .|. littleMask, xK_a), sinkAll)
       , ((thumbMask .|. littleMask, xK_c), kill)
-      , ((thumbMask .|. littleMask, xK_d), menusMenu)
       , ((thumbMask .|. littleMask, xK_f), spawn "xfce4-find-cursor")
       , ((thumbMask .|. littleMask, xK_h), windows swapUp)
       , ((thumbMask .|. littleMask, xK_i), nextScreen)
       , ((thumbMask .|. littleMask, xK_l), windows swapDown)
       , ((thumbMask .|. littleMask, xK_m), xmodmapMenu)
       , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
-      , ((thumbMask .|. littleMask, xK_r), recompileMenu)
+      , ((thumbMask .|. littleMask, xK_r), withHomeDir $ spawn . (<> "/.xmonad/bin/xrandr-rotate.sh"))
       , ((thumbMask .|. ringMask, xK_c), spawn "light -U 3")
       , ((thumbMask .|. ringMask, xK_v), spawn "light -A 3")
       , ((thumbMask .|. ringMask, xK_f), spawn "[ $(pamixer --get-mute) = 'true' ] && pamixer --unmute || pamixer --mute")
@@ -77,7 +76,6 @@ myKeys fingers _ = M.fromList $
       -- Another KeyMask
       , ((shiftMask, xK_F1), xmodmapMenu)
       , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
-      , ((shiftMask, xK_F3), withHomeDir $ spawn . (<> "/bin/dzen2statusbar.sh"))
       , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
       , ((shiftMask, xK_Print), takeScreenShot FullScreen)
       ]

@@ -37,6 +37,7 @@ main = dzen >=> xmonad $ desktopConfig
     dzen :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
     dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP $ myToggleStrutsKey fingers
 
+
 myStartupHook :: X ()
 myStartupHook = do
   ewmhDesktopsStartup
