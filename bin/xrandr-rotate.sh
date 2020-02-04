@@ -6,7 +6,7 @@ if [[ -f $status_file ]] ; then
     xrandr --output eDP1 --rotate normal
     rm "$status_file"
 else
-    xrandr --output eDP1 --rotate left
+    xrandr --output eDP1 --rotate right
     touch "$status_file"
 fi
 
