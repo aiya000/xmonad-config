@@ -9,7 +9,7 @@ import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Util.EZConfig (additionalMouseBindings)
 import XMonadConfig.Keys (myKeys, myToggleStrutsKey)
-import XMonadConfig.Keys.FingersMask (altMask, superMask)
+import XMonadConfig.Keys.FingersMask (superMask)
 import qualified XMonadConfig.Keys.FingersMask as FingersMask
 import XMonadConfig.LayoutHook (myLayoutHook)
 import XMonadConfig.XConfig (myTerminal, myWorkspaces)
@@ -54,7 +54,7 @@ myManageHook = composeAll
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =
   [ ((shiftMask .|. superMask, button1), mouseResizeWindow)
-  , ((controlMask .|. altMask, button1), mouseMoveWindow)
+  , ((controlMask .|. superMask, button1), mouseMoveWindow)
   ]
 
 myHandleEventHook :: Event -> X All
