@@ -44,6 +44,7 @@ myKeys fingers _ = M.fromList $
       , ((thumbMask .|. littleMask, xK_m), xmodmapMenu)
       , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
       , ((thumbMask .|. littleMask, xK_r), withHomeDir $ spawn . (<> "/.xmonad/bin/xrandr-rotate.sh"))
+      , ((thumbMask .|. ringMask, xK_a), withHomeDir $ spawn . (<> "/bin/autokey-gtk.sh"))
       , ((thumbMask .|. ringMask, xK_b), spawn myWebBrowser)
       , ((thumbMask .|. ringMask, xK_c), spawn "light -U 3")
       , ((thumbMask .|. ringMask, xK_d), spawn "pamixer --increase 10")
