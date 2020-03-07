@@ -1,4 +1,5 @@
 import Control.Monad ((>=>))
+import Data.Default (def)
 import Data.Monoid (All)
 import XMonad
 import XMonad.Config.Desktop (desktopConfig)
@@ -10,7 +11,6 @@ import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Util.EZConfig (additionalMouseBindings)
 import XMonadConfig.Keys (myKeys, myToggleStrutsKey)
 import XMonadConfig.Keys.FingersMask (superMask)
-import qualified XMonadConfig.Keys.FingersMask as FingersMask
 import XMonadConfig.LayoutHook (myLayoutHook)
 import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 
@@ -18,7 +18,7 @@ main :: IO ()
 main = dzen >=> xmonad $ desktopConfig
   { terminal = myTerminal
   , modMask = superMask
-  , keys = myKeys fingers
+  , keys = myKeys def
   , layoutHook = myLayoutHook
   , startupHook = myStartupHook
   , manageHook = myManageHook
@@ -30,12 +30,9 @@ main = dzen >=> xmonad $ desktopConfig
   }
   `additionalMouseBindings` myMouseBindings
   where
-    fingers = FingersMask.surfacePro3
-    -- fingers = FingersMask.hhkbLite2US
-
     -- | Runs the dummy dzen2 for 'myToggleStrutsKey', please see ~/bin/dzen2statusbar.sh for the real dzen2 starting up
     dzen :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
-    dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP $ myToggleStrutsKey fingers
+    dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP $ myToggleStrutsKey def
 
 
 myStartupHook :: X ()
@@ -43,6 +40,7 @@ myStartupHook = do
   ewmhDesktopsStartup
   setWMName "LG3D" -- Fix startings of Java Swing apps
   spawn myTerminal
+  spawn "auto-gtk --configure"
 
 myManageHook :: ManageHook
 myManageHook = composeAll

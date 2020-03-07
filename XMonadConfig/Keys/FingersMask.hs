@@ -38,20 +38,9 @@ fromFingersMask FingersMask {..} =
   , fromKeyMask' thumbMask'
   )
 
--- | A finger masks layout for surface type cover
 instance Default FingersMask where
-  def = surfacePro3
-
-surfacePro3 :: FingersMask
-surfacePro3 = FingersMask
-  { ringMask'   = SuperMask
-  , littleMask' = ControlMask
-  , thumbMask'  = AltMask
-  }
-
-hhkbLite2US :: FingersMask
-hhkbLite2US = FingersMask
-  { ringMask'   = AltMask
-  , littleMask' = ControlMask
-  , thumbMask'  = SuperMask
-  }
+  def = FingersMask
+    { ringMask'   = AltMask
+    , littleMask' = ControlMask
+    , thumbMask'  = SuperMask
+    }
