@@ -53,7 +53,6 @@ myKeys fingers _ = M.fromList $
       , ((thumbMask .|. ringMask, xK_g), withHomeDir $ spawn . (<> "/bin/gvim.sh"))
       , ((thumbMask .|. ringMask, xK_m), spawn "pavucontrol")
       , ((thumbMask .|. ringMask, xK_q), spawn "slock")
-      , ((thumbMask .|. ringMask, xK_r), spawn "dmenu_run")
       , ((thumbMask .|. ringMask, xK_s), spawn "pamixer --decrease 10")
       , ((thumbMask .|. ringMask, xK_t), spawn myTerminal)
       , ((thumbMask .|. ringMask, xK_v), spawn "light -A 3")
@@ -69,6 +68,7 @@ myKeys fingers _ = M.fromList $
       , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
       , ((thumbMask, xK_l), windows focusDown)
       -- Another KeyMask
+      , ((ringMask, xK_r), spawn "dmenu_run")
       , ((shiftMask, xK_F1), xmodmapMenu)
       , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
       , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
