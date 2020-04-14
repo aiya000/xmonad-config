@@ -11,11 +11,10 @@ import Data.Semigroup ((<>))
 import XMonad
 import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.SinkAll (sinkAll)
-import XMonad.Core (windowset)
 import XMonad.Layout (ChangeLayout (..))
 import XMonad.Layout.SubLayouts (GroupMsg (..))
-import XMonad.Operations (sendMessage, withFocused, screenWorkspace)
-import XMonad.StackSet (focusDown, focusUp, greedyView, shift, swapDown, swapUp, screen, current, view)
+import XMonad.Operations (sendMessage, withFocused)
+import XMonad.StackSet (focusDown, focusUp, greedyView, shift, swapDown, swapUp)
 import XMonadConfig.Keys.FingersMask (FingersMask, fromFingersMask)
 import XMonadConfig.Keys.Menus
 import XMonadConfig.XConfig (myTerminal, myWebBrowser, myWorkspaces)
@@ -40,7 +39,7 @@ myKeys fingers _ = M.fromList $
       , ((thumbMask .|. littleMask, xK_c), kill)
       , ((thumbMask .|. littleMask, xK_f), spawn "xfce4-find-cursor")
       , ((thumbMask .|. littleMask, xK_h), windows swapUp)
-      , ((thumbMask .|. littleMask, xK_i), toggleScreeen1and2) -- Please also see <C-S-M-i>
+      , ((thumbMask .|. littleMask, xK_i), nextScreen)
       , ((thumbMask .|. littleMask, xK_l), windows swapDown)
       , ((thumbMask .|. littleMask, xK_m), xmodmapMenu)
       , ((thumbMask .|. littleMask, xK_n), sendMessage NextLayout)
@@ -74,7 +73,6 @@ myKeys fingers _ = M.fromList $
       , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
       , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
       , ((shiftMask, xK_Print), takeScreenShot FullScreen)
-      , ((thumbMask .|. littleMask .|. shiftMask, xK_i), nextScreen) -- Please also see <C-M-i>
       ]
 
     -- NOTE: 1 is omitted because it is hard to type
@@ -89,19 +87,3 @@ myKeys fingers _ = M.fromList $
       let keymap = (ringMask, numKey)
       let putting = windows $ shift workspace
       pure (keymap, putting)
-
-    -- Swap the current focus with 1 and 3 if I'm on the screen 1 or 3.
-    -- Or Set the focus to the next screen.
-    toggleScreeen1and2 = do
-      sid <- gets $ screen . current . windowset
-      -- spawn $ "notify-send " <> show sid
-      case sid of
-        S 0 -> focusScreen 2
-        S _ -> nextScreen
-
-focusScreen :: ScreenId -> X ()
-focusScreen sid = do
-  maybeScreen <- screenWorkspace sid
-  case maybeScreen of
-    Nothing -> pure ()
-    Just screen -> windows $ view screen
