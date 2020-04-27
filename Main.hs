@@ -2,7 +2,7 @@ import Control.Monad ((>=>))
 import Data.Default (def)
 import Data.Monoid (All)
 import XMonad
-import XMonad.Config.Desktop (desktopConfig)
+import XMonad.Config.Xfce (xfceConfig)
 import XMonad.Hooks.DynamicLog (dzenPP, statusBar)
 import XMonad.Hooks.EwmhDesktops (ewmhDesktopsEventHook, ewmhDesktopsStartup, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks (AvoidStruts)
@@ -15,7 +15,7 @@ import XMonadConfig.LayoutHook (myLayoutHook)
 import XMonadConfig.XConfig (myTerminal, myWorkspaces)
 
 main :: IO ()
-main = dzen >=> xmonad $ desktopConfig
+main = xmonad . docks $ xfceConfig
   { terminal = myTerminal
   , modMask = superMask
   , keys = myKeys def
@@ -29,10 +29,6 @@ main = dzen >=> xmonad $ desktopConfig
   , handleEventHook = myHandleEventHook
   }
   `additionalMouseBindings` myMouseBindings
-  where
-    -- | Runs the dummy dzen2 for 'myToggleStrutsKey', please see ~/bin/dzen2statusbar.sh for the real dzen2 starting up
-    dzen :: LayoutClass l Window => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
-    dzen = statusBar "echo 'hi' | dzen2 -dock " dzenPP $ myToggleStrutsKey def
 
 
 myStartupHook :: X ()

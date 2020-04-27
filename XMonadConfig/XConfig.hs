@@ -6,7 +6,7 @@ module XMonadConfig.XConfig
   ) where
 
 myTerminal :: String
-myTerminal = "termite"
+myTerminal = "xfce4-terminal"
 
 myWebBrowser :: String
 myWebBrowser = "vivaldi-stable"
