@@ -40,7 +40,7 @@ fromFingersMask FingersMask {..} =
 
 instance Default FingersMask where
   def = FingersMask
-    { ringMask'   = SuperMask
+    { ringMask'   = AltMask
     , littleMask' = ControlMask
-    , thumbMask'  = AltMask
+    , thumbMask'  = SuperMask
     }

@@ -21,11 +21,6 @@ import XMonadConfig.XConfig (myTerminal, myWebBrowser, myWorkspaces)
 
 type Keys = XConfig Layout -> Map (KeyMask, KeySym) (X ())
 
-myToggleStrutsKey :: FingersMask -> XConfig l -> (KeyMask, KeySym)
-myToggleStrutsKey fingers _ =
-  let (_, littleMask, thumbMask) = fromFingersMask fingers
-  in (thumbMask .|. littleMask, xK_g)
-
 myKeys :: FingersMask -> Keys
 myKeys fingers _ = M.fromList $
   keys <>
@@ -75,15 +70,14 @@ myKeys fingers _ = M.fromList $
       , ((shiftMask, xK_Print), takeScreenShot FullScreen)
       ]
 
-    -- NOTE: 1 is omitted because it is hard to type
     switchingWorkspaces = do
-        (numKey, workspace) <- zip [xK_2 .. xK_9] myWorkspaces
+        (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
         let keymap = (thumbMask .|. littleMask, numKey)
         let switching = windows $ greedyView workspace
         pure (keymap, switching)
 
     puttingWindowsToWorkspace = do
-      (numKey, workspace) <- zip [xK_2 .. xK_9] myWorkspaces
+      (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
       let keymap = (ringMask, numKey)
       let putting = windows $ shift workspace
       pure (keymap, putting)
