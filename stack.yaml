@@ -1,9 +1,0 @@
-resolver: lts-14.15
-flags: {}
-extra-package-dbs: []
-packages:
-- .
-extra-deps:
-- xmonad-contrib-0.15
-- git: https://github.com/aiya000/xmonad
-  commit: 5404b5a44134efa587d543a1d6341b75b589b393
