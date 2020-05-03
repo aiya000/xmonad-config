@@ -1,37 +1,54 @@
-# xmonad-config
-My xmonad configuration (xmonad.hs) with haskell-stack
+# :diamond_shape_with_a_dot_inside: xmonad-config :diamond_shape_with_a_dot_inside:
 
+This is either
 
-# How to install
+- A xmonad confiuration
+- A windows manager implementation
+    - that is implemented by xmonad as a window manager buliding library
 
-```shell
+To build this project, using `haskell-stack`.
+
+## How to install
+
+```shell-session
 $ git clone {this repository} ~/.xmonad
+$ cd ~/.xmonad
 $ stack install
 ```
 
-- `$XMONAD_CONFIG_DIR` maybe able to use instead of `~/.xmonad` (I have not checked)
+## How to run
 
-
-# How to use
 Add the following this line into your .xinitrc after `stack install`
 
-```shell
+```shell-session
 exec ~/.local/bin/xmonad-config
 ```
 
-and execute `startx`
+Also execute `startx`
 
+## How to restart (like xmonad's `--replace`)
 
-# How to restart ? <a name="xmonad-restart"></a>
-Please use replace.sh
-
-```console
+```shell-session
 $ ./replace.sh
 ```
 
-# I [restarted xmonad](#xmonad-restart), but anything wasn't changed
-Please try :point_down: and [restart xmonad](#xmonad-restart) again
+or
 
 ```shell-session
-$ rm $(find .stack-work/install -type f -name xmonad-config | head -1)
+$ xmonad-config --replace
 ```
+
+## :exclamation: NOTICE :exclamation:
+
+The xmonad-config's build script (`./build`) finds only a runnable binary 'xmonad-config' from .stack-work.
+
+After the stack resolver version upgraded, we must run :point_down:
+
+```shell-session
+$ rm -rf .stack-work
+```
+
+## Implementations
+
+- [standalone](https://github.com/aiya000/xmonad-config/tree/standalone): To use conky and dzen2
+- [with-xfce4](https://github.com/aiya000/xmonad-config/tree/with-xfce4): To use xfce4-panel
