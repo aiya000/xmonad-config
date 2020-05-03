@@ -53,11 +53,6 @@ myKeys fingers _ = M.fromList $
       , ((thumbMask .|. ringMask, xK_v), spawn "light -A 3")
       , ((thumbMask .|. ringMask, xK_w), spawn "systemctl suspend ; slock")
       , ((thumbMask .|. ringMask, xK_x), withHomeDir $ spawn . (<> "/.xmonad/bin/trackpad-toggle.sh"))
-      -- TODO: できない。やりたい。
-      --, ((ringMask .|. littleMask, xK_h), spawn "xdotool key --window $(xdotool getactivewindow) Left")
-      --, ((ringMask .|. littleMask, xK_j), spawn "xdotool key --window $(xdotool getactivewindow) Down")
-      --, ((ringMask .|. littleMask, xK_k), spawn "xdotool key --window $(xdotool getactivewindow) Up")
-      --, ((ringMask .|. littleMask, xK_l), spawn "xdotool key --window $(xdotool getactivewindow) Right")
       , ((thumbMask, xK_h), windows focusUp)
       , ((thumbMask, xK_j), withFocused $ sendMessage . MergeAll)
       , ((thumbMask, xK_k), withFocused $ sendMessage . UnMerge)
@@ -70,14 +65,15 @@ myKeys fingers _ = M.fromList $
       , ((shiftMask, xK_Print), takeScreenShot FullScreen)
       ]
 
+    -- NOTE: 1 is hard to type.
     switchingWorkspaces = do
-        (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
+        (numKey, workspace) <- zip [xK_2 .. xK_9] myWorkspaces
         let keymap = (thumbMask .|. littleMask, numKey)
         let switching = windows $ greedyView workspace
         pure (keymap, switching)
 
     puttingWindowsToWorkspace = do
-      (numKey, workspace) <- zip [xK_1 .. xK_9] myWorkspaces
+      (numKey, workspace) <- zip [xK_2 .. xK_9] myWorkspaces
       let keymap = (ringMask, numKey)
       let putting = windows $ shift workspace
       pure (keymap, putting)

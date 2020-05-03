@@ -11,5 +11,6 @@ myTerminal = "xfce4-terminal"
 myWebBrowser :: String
 myWebBrowser = "vivaldi-stable"
 
+-- NOTE: 1 is hard to type.
 myWorkspaces :: [String]
-myWorkspaces = map show [1 .. 4]
+myWorkspaces = map show [2 .. 5]

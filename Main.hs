@@ -32,6 +32,7 @@ myStartupHook :: X ()
 myStartupHook = do
   ewmhDesktopsStartup
   setWMName "LG3D" -- Fix startings of Java Swing apps
+  spawn "xfce4-panel"
   spawn myTerminal
   spawn "auto-gtk --configure"
 
