@@ -25,25 +25,6 @@ withHomeDir f = do
   homeDir <- liftIO $ getEnv "HOME"
   f $ fromString homeDir
 
--- | See `takeScreenShot`
-data ScreenShotType = FullScreen
-                    | ActiveWindow
-  deriving (Show)
-
--- |
--- Take screenshot as ScreenShotType to ~/Picture/ScreenShot-$(date +'%Y-%m-%d-%H-%M-%S').png,
--- and notify to finish as screen and voice message
---
--- Dependency:
--- - xfce4-screenshooter
---
--- Optional:
--- - espeak
--- - notify-send
-takeScreenShot :: ScreenShotType -> X ()
-takeScreenShot x = withHomeDir $ \homeDir ->
-  spawn [i|${homeDir :: String}/.xmonad/bin/screenshot.sh ${x}|]
-
 myXPConf :: XPConfig
 myXPConf = greenXPConfig
   { font = "xft:Ricty:Regular:size=10:antialias=true"
