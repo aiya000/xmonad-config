@@ -61,8 +61,8 @@ myKeys fingers _ = M.fromList $
       , ((ringMask, xK_r), spawn "dmenu_run")
       , ((shiftMask, xK_F1), xmodmapMenu)
       , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
-      , ((noModMask, xK_Print), takeScreenShot ActiveWindow)
-      , ((shiftMask, xK_Print), takeScreenShot FullScreen)
+      , ((noModMask, xK_Print), spawn "xfce4-screenshooter --window --save ~/Picture")
+      , ((shiftMask, xK_Print), spawn "xfce4-screenshooter")
       ]
 
     -- NOTE: 1 is hard to type.
