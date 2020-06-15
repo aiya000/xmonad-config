@@ -32,10 +32,8 @@ myStartupHook :: X ()
 myStartupHook = do
   ewmhDesktopsStartup
   setWMName "LG3D" -- Fix startings of Java Swing apps
-  spawn "~/.xmonad/bin/dzen2statusbar.sh"
   spawn "xfce4-panel"
   spawn myTerminal
-  spawn "pulseaudio --daemonize=true --start"
   spawn "autokey-gtk --configure"
 
 myManageHook :: ManageHook
