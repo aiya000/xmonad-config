@@ -63,6 +63,7 @@ myKeys fingers _ = M.fromList $
       , ((shiftMask, xK_F2), withHomeDir $ spawn . (<> "/bin/dunst-swap-screen.sh"))
       , ((noModMask, xK_Print), spawn "xfce4-screenshooter --window --save ~/Picture")
       , ((shiftMask, xK_Print), spawn "xfce4-screenshooter")
+      , ((ringMask, xK_Print), spawn "xfce4-screenshooter --region")
       ]
 
     switchingWorkspaces = do
